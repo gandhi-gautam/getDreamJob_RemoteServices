@@ -17,6 +17,7 @@ public class Job {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    protected Date createdOn;
     private String profileName;
     private int noOfOpening;
     private String batchEligible;

@@ -29,6 +29,7 @@ public class JobServiceImpl implements JobService {
     public Company createNewJob(long companyId, Job job) {
         if (companyRepository.existsById(companyId)) {
             Company company = companyRepository.findById(companyId).get();
+            job.setCreatedOn(new java.util.Date());
             job.setCompany(company);
             company.getJobs().add(job);
             return companyRepository.save(company);

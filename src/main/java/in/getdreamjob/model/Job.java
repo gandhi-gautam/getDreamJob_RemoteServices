@@ -14,10 +14,10 @@ import java.util.Set;
 @Entity
 public class Job {
 
+    protected Date createdOn;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    protected Date createdOn;
     private String profileName;
     private int noOfOpening;
     private String batchEligible;
@@ -28,6 +28,10 @@ public class Job {
     private String applyLink;
     @Transient
     private long companyId;
+    @Transient
+    private String companyName;
+    @Transient
+    private String companyOfficialWebsite;
     @Lob
     private String jobDescription;
     @Lob

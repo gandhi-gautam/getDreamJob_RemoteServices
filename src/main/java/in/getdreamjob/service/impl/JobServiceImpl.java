@@ -52,7 +52,16 @@ public class JobServiceImpl implements JobService {
         List<Job> jobs = jobRepository.findAll();
         for (Job job : jobs) {
             if (job.getCompany() != null) {
-                job.setCompanyId(job.getCompany().getId());
+                if (job.getCompany().getId() != 0) {
+                    job.setCompanyId(job.getCompany().getId());
+                }
+                if (job.getCompany().getName() != null && !job.getCompany().getName().isEmpty()) {
+                    job.setCompanyName(job.getCompany().getName());
+                }
+
+                if (job.getCompany().getOfficialWebsite() != null && !job.getCompany().getOfficialWebsite().isEmpty()) {
+                    job.setCompanyOfficialWebsite(job.getCompany().getOfficialWebsite());
+                }
             }
         }
         return jobs;
@@ -63,7 +72,16 @@ public class JobServiceImpl implements JobService {
         if (jobRepository.existsById(jobId)) {
             Job job = jobRepository.findById(jobId).get();
             if (job.getCompany() != null) {
-                job.setCompanyId(job.getCompany().getId());
+                if (job.getCompany().getId() != 0) {
+                    job.setCompanyId(job.getCompany().getId());
+                }
+                if (job.getCompany().getName() != null && !job.getCompany().getName().isEmpty()) {
+                    job.setCompanyName(job.getCompany().getName());
+                }
+
+                if (job.getCompany().getOfficialWebsite() != null && !job.getCompany().getOfficialWebsite().isEmpty()) {
+                    job.setCompanyOfficialWebsite(job.getCompany().getOfficialWebsite());
+                }
             }
             return job;
         }

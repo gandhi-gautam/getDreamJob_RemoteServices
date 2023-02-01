@@ -1,7 +1,9 @@
 package in.getdreamjob.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -11,10 +13,11 @@ import java.util.Set;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 public class Job {
 
-    protected Date createdOn;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -26,6 +29,7 @@ public class Job {
     private String applicationMode;
     private Date lastApplyDate;
     private String applyLink;
+    private Date createdOn;
     @Transient
     private long companyId;
     @Transient
@@ -46,14 +50,14 @@ public class Job {
     @JsonIgnore
     @ManyToOne
     private Company company;
-    @ManyToMany
-    @JoinTable(name = "job_location",
-            joinColumns = @JoinColumn(name = "job_id"),
-            inverseJoinColumns = @JoinColumn(name = "location_id"))
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE
+    })
+    @JoinTable(name = "job_locations",
+            joinColumns = {@JoinColumn(name = "job_id")},
+            inverseJoinColumns = {@JoinColumn(name = "location_id")}
+    )
     private Set<Location> locations = new HashSet<>();
-    @ManyToMany
-    @JoinTable(name = "job_qualification",
-            joinColumns = @JoinColumn(name = "job_id"),
-            inverseJoinColumns = @JoinColumn(name = "qualification_id"))
-    private Set<Qualification> qualifications = new HashSet<>();
 }

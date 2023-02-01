@@ -52,16 +52,7 @@ public class JobServiceImpl implements JobService {
         List<Job> jobs = jobRepository.findAll();
         for (Job job : jobs) {
             if (job.getCompany() != null) {
-                if (job.getCompany().getId() != 0) {
-                    job.setCompanyId(job.getCompany().getId());
-                }
-                if (job.getCompany().getName() != null && !job.getCompany().getName().isEmpty()) {
-                    job.setCompanyName(job.getCompany().getName());
-                }
-
-                if (job.getCompany().getOfficialWebsite() != null && !job.getCompany().getOfficialWebsite().isEmpty()) {
-                    job.setCompanyOfficialWebsite(job.getCompany().getOfficialWebsite());
-                }
+                addCompanyDetails(job);
             }
         }
         return jobs;
@@ -71,17 +62,8 @@ public class JobServiceImpl implements JobService {
     public Job getJob(long jobId) {
         if (jobRepository.existsById(jobId)) {
             Job job = jobRepository.findById(jobId).get();
+            addCompanyDetails(job);
             if (job.getCompany() != null) {
-                if (job.getCompany().getId() != 0) {
-                    job.setCompanyId(job.getCompany().getId());
-                }
-                if (job.getCompany().getName() != null && !job.getCompany().getName().isEmpty()) {
-                    job.setCompanyName(job.getCompany().getName());
-                }
-
-                if (job.getCompany().getOfficialWebsite() != null && !job.getCompany().getOfficialWebsite().isEmpty()) {
-                    job.setCompanyOfficialWebsite(job.getCompany().getOfficialWebsite());
-                }
             }
             return job;
         }
@@ -102,7 +84,7 @@ public class JobServiceImpl implements JobService {
             actualJob.setMinSalary(job.getMinSalary());
         }
         if (job.getMaxSalary() != null && !job.getMaxSalary().isEmpty()) {
-            actualJob.setMinSalary(job.getMaxSalary());
+            actualJob.setMaxSalary(job.getMaxSalary());
         }
         if (job.getApplicationMode() != null && !job.getApplicationMode().isEmpty()) {
             actualJob.setApplicationMode(job.getApplicationMode());
@@ -124,6 +106,19 @@ public class JobServiceImpl implements JobService {
         }
         if (job.getImage() != null && job.getImage().length > 0) {
             actualJob.setImage(job.getImage());
+        }
+    }
+
+    public void addCompanyDetails(Job job) {
+        if (job.getCompany().getId() != 0) {
+            job.setCompanyId(job.getCompany().getId());
+        }
+        if (job.getCompany().getName() != null && !job.getCompany().getName().isEmpty()) {
+            job.setCompanyName(job.getCompany().getName());
+        }
+
+        if (job.getCompany().getOfficialWebsite() != null && !job.getCompany().getOfficialWebsite().isEmpty()) {
+            job.setCompanyOfficialWebsite(job.getCompany().getOfficialWebsite());
         }
     }
 }

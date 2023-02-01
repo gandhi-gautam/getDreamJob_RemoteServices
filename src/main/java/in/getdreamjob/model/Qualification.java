@@ -14,6 +14,6 @@ public class Qualification {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String name;
-    @ManyToMany(mappedBy = "qualifications")
-    private Set<Job> jobs;
+//    @ManyToMany(mappedBy = "qualifications")
+//    private Set<Job> jobs;
 }

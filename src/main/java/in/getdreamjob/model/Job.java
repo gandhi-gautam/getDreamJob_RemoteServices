@@ -29,7 +29,7 @@ public class Job {
     private String applicationMode;
     private Date lastApplyDate;
     private String applyLink;
-    private Date createdOn;
+    private String createdOn;
     @Transient
     private long companyId;
     @Transient

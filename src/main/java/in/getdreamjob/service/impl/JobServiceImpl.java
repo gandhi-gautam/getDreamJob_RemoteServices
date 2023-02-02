@@ -9,8 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -33,17 +31,12 @@ public class JobServiceImpl implements JobService {
     public Company createNewJob(long companyId, Job job) throws ParseException {
         if (companyRepository.existsById(companyId)) {
             Company company = companyRepository.findById(companyId).get();
-            addCurrentDate(job);
+            job.setCreatedOn(new Date());
             job.setCompany(company);
             company.getJobs().add(job);
             return companyRepository.save(company);
         }
         return null;
-    }
-
-    private void addCurrentDate(Job job) throws ParseException {
-        LocalDate date = LocalDate.now();
-        job.setCreatedOn(String.valueOf(date));
     }
 
     @Override

@@ -27,9 +27,13 @@ public class Job {
     private String minSalary;
     private String maxSalary;
     private String applicationMode;
+
+    @Temporal(TemporalType.DATE)
     private Date lastApplyDate;
     private String applyLink;
-    private String createdOn;
+
+    @Temporal(TemporalType.DATE)
+    private Date createdOn;
     @Transient
     private long companyId;
     @Transient

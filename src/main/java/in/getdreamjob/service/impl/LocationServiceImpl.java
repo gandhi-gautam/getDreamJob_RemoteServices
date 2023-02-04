@@ -31,6 +31,7 @@ public class LocationServiceImpl implements LocationService {
     public Job createNewLocation(long jobId, Location location) {
         if (jobRepository.existsById(jobId)) {
             Job job = jobRepository.findById(jobId).get();
+            location = checkUniqueLocation(location);
             job.getLocations().add(location);
             location.getJobs().add(job);
             job = jobRepository.save(job);
@@ -41,11 +42,14 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
-    public Location updateLocation(long locationId, Location location) {
-        if (locationRepository.existsById(locationId)) {
-            Location actualLocation = locationRepository.findById(locationId).get();
-            validateLocationData(actualLocation, location);
-            return locationRepository.save(actualLocation);
+    public Location updateLocation(long jobId, long locationId, Location location) {
+        Location tempLocation = locationRepository.findByName(location.getName());
+        if (tempLocation == null) {
+            if (locationRepository.existsById(locationId)) {
+                Location actualLocation = locationRepository.findById(locationId).get();
+                validateLocationData(actualLocation, location);
+                return locationRepository.save(actualLocation);
+            }
         }
         return null;
     }
@@ -67,5 +71,14 @@ public class LocationServiceImpl implements LocationService {
         if (location.getName() != null && !location.getName().isEmpty()) {
             actualLocation.setName(location.getName());
         }
+    }
+
+
+    private Location checkUniqueLocation(Location location) {
+        Location tempLocation = locationRepository.findByName(location.getName());
+        if (tempLocation != null) {
+            return tempLocation;
+        }
+        return location;
     }
 }

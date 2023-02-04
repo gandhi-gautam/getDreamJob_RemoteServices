@@ -8,7 +8,7 @@ import java.util.List;
 public interface LocationService {
     public Job createNewLocation(long jobId, Location location);
 
-    public Location updateLocation(long locationId, Location location);
+    public Location updateLocation(long jobId, long locationId, Location location);
 
     public List<Location> getAllLocations();
 

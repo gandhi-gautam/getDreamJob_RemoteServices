@@ -22,9 +22,9 @@ public class LocationController {
         return new ResponseEntity<>(locationService.createNewLocation(jobId, location), HttpStatus.CREATED);
     }
 
-    @PutMapping("/{locationId}")
-    public ResponseEntity<?> updateLocation(@PathVariable long locationId, @RequestBody Location location) {
-        return new ResponseEntity<>(locationService.updateLocation(locationId, location), HttpStatus.OK);
+    @PutMapping("/{jobId}/{locationId}")
+    public ResponseEntity<?> updateLocation(@PathVariable long jobId, @PathVariable long locationId, @RequestBody Location location) {
+        return new ResponseEntity<>(locationService.updateLocation(jobId, locationId, location), HttpStatus.OK);
     }
 
     @GetMapping("/all")

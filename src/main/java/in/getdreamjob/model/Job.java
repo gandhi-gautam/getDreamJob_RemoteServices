@@ -64,4 +64,14 @@ public class Job {
             inverseJoinColumns = {@JoinColumn(name = "location_id")}
     )
     private Set<Location> locations = new HashSet<>();
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE
+    })
+    @JoinTable(name = "job_qualifications",
+            joinColumns = {@JoinColumn(name = "job_id")},
+            inverseJoinColumns = {@JoinColumn(name = "qualification_id")}
+    )
+    private Set<Qualification> qualifications = new HashSet<>();
 }

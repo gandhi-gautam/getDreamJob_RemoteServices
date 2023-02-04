@@ -3,12 +3,15 @@ package in.getdreamjob.service.impl;
 import in.getdreamjob.model.Job;
 import in.getdreamjob.model.Location;
 import in.getdreamjob.model.Qualification;
+import in.getdreamjob.model.enums.JobType;
 import in.getdreamjob.repository.LocationRepository;
 import in.getdreamjob.repository.QualificationRepository;
 import in.getdreamjob.service.HomeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -37,6 +40,7 @@ public class HomeServiceImpl implements HomeService {
         return null;
     }
 
+
     @Override
     public Set<Job> getAllJobsByQualifications(String qualificationName) {
         Qualification qualification = qualificationRepository.findByName(qualificationName);
@@ -45,6 +49,26 @@ public class HomeServiceImpl implements HomeService {
             return addCompanyDetails(jobs);
         }
         return null;
+    }
+
+    @Override
+    public List<String> getAllDistinctLocationNames() {
+        return locationRepository.findDistinctLocationName();
+    }
+
+    @Override
+    public List<String> getAllDistinctQualificationNames() {
+        return qualificationRepository.findDistinctQualificationName();
+    }
+
+    @Override
+    public List<String> getAllJobTypes() {
+        List<String> jobTypes = new ArrayList<>();
+        JobType[] jobs = JobType.values();
+        for (JobType job : jobs) {
+            jobTypes.add(job.name());
+        }
+        return jobTypes;
     }
 
     private Set<Job> addCompanyDetails(Set<Job> jobs) {

@@ -1,6 +1,7 @@
 package in.getdreamjob.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import in.getdreamjob.model.enums.JobType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -48,6 +49,10 @@ public class Job {
     private String preferredQualification;
     @Lob
     private Byte[] image;
+
+    @Enumerated(EnumType.STRING)
+    private JobType jobType;
+
     @OneToOne(cascade = CascadeType.ALL)
     private JobAnalytics jobAnalytics;
 

@@ -27,6 +27,7 @@ public class QualificationServiceImpl implements QualificationService {
     public Job createNewQualification(long jobId, Qualification qualification) {
         if (jobRepository.existsById(jobId)) {
             Job job = jobRepository.findById(jobId).get();
+            qualification = checkUniqueQualification(qualification);
             job.getQualifications().add(qualification);
             qualification.getJobs().add(job);
             job = jobRepository.save(job);
@@ -37,11 +38,14 @@ public class QualificationServiceImpl implements QualificationService {
     }
 
     @Override
-    public Qualification updateQualification(long qualificationId, Qualification qualification) {
-        if (qualificationRepository.existsById(qualificationId)) {
-            Qualification actualQualification = qualificationRepository.findById(qualificationId).get();
-            validateQualificationData(actualQualification, qualification);
-            return qualificationRepository.save(actualQualification);
+    public Qualification updateQualification(long jobId, long qualificationId, Qualification qualification) {
+        Qualification tempQualification = qualificationRepository.findByName(qualification.getName());
+        if (tempQualification == null) {
+            if (qualificationRepository.existsById(qualificationId)) {
+                Qualification actualQualification = qualificationRepository.findById(qualificationId).get();
+                validateQualificationData(actualQualification, qualification);
+                return qualificationRepository.save(actualQualification);
+            }
         }
         return null;
     }
@@ -63,5 +67,13 @@ public class QualificationServiceImpl implements QualificationService {
         if (qualification.getName() != null && !qualification.getName().isEmpty()) {
             actualQualification.setName(qualification.getName());
         }
+    }
+
+    private Qualification checkUniqueQualification(Qualification qualification) {
+        Qualification tempQualification = qualificationRepository.findByName(qualification.getName());
+        if (tempQualification != null) {
+            return tempQualification;
+        }
+        return qualification;
     }
 }

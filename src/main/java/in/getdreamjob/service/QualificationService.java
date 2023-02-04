@@ -10,7 +10,7 @@ import java.util.List;
 public interface QualificationService {
     public Job createNewQualification(long jobId, Qualification qualification);
 
-    public Qualification updateQualification(long qualificationId, Qualification qualification);
+    public Qualification updateQualification(long jobId, long qualificationId, Qualification qualification);
 
     public List<Qualification> getAllQualifications();
 

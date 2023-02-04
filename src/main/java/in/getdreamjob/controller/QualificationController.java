@@ -23,9 +23,9 @@ public class QualificationController {
         return new ResponseEntity<>(qualificationService.createNewQualification(jobId, qualification), HttpStatus.CREATED);
     }
 
-    @PutMapping("/{qualificationId}")
-    public ResponseEntity<?> updateQualification(@PathVariable long qualificationId, @RequestBody Qualification qualification) {
-        return new ResponseEntity<>(qualificationService.updateQualification(qualificationId, qualification), HttpStatus.OK);
+    @PutMapping("/{jobId}/{qualificationId}")
+    public ResponseEntity<?> updateQualification(@PathVariable long jobId, @PathVariable long qualificationId, @RequestBody Qualification qualification) {
+        return new ResponseEntity<>(qualificationService.updateQualification(jobId, qualificationId, qualification), HttpStatus.OK);
     }
 
     @GetMapping("/all")

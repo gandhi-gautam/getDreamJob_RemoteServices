@@ -15,4 +15,6 @@ public interface HomeService {
     List<String> getAllDistinctQualificationNames();
 
     List<String> getAllJobTypes();
+
+    Set<Job> getAllJobsByJobType(String typeName);
 }

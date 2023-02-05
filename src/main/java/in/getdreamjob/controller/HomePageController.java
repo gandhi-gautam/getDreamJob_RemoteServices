@@ -39,8 +39,13 @@ public class HomePageController {
         return new ResponseEntity<>(homeService.getAllDistinctQualificationNames(), HttpStatus.OK);
     }
 
-    @GetMapping("/jobtypes")
+    @GetMapping("/jobTypes")
     public ResponseEntity<?> getAllDistinctJobTypeNames() {
         return new ResponseEntity<>(homeService.getAllJobTypes(), HttpStatus.OK);
+    }
+
+    @GetMapping("/jobType/{typeName}")
+    public ResponseEntity<?> getAllJobsByJobType(@PathVariable String typeName){
+        return new ResponseEntity<>(homeService.getAllJobsByJobType(typeName), HttpStatus.OK);
     }
 }

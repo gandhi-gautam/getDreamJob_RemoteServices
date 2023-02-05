@@ -4,6 +4,7 @@ import in.getdreamjob.model.Job;
 import in.getdreamjob.model.Location;
 import in.getdreamjob.model.Qualification;
 import in.getdreamjob.model.enums.JobType;
+import in.getdreamjob.repository.JobRepository;
 import in.getdreamjob.repository.LocationRepository;
 import in.getdreamjob.repository.QualificationRepository;
 import in.getdreamjob.service.HomeService;
@@ -21,12 +22,15 @@ public class HomeServiceImpl implements HomeService {
 
     private JobServiceImpl jobService;
 
+    private JobRepository jobRepository;
+
     @Autowired
     public HomeServiceImpl(LocationRepository locationRepository, QualificationRepository qualificationRepository,
-                           JobServiceImpl jobService) {
+                           JobServiceImpl jobService, JobRepository jobRepository) {
         this.locationRepository = locationRepository;
         this.qualificationRepository = qualificationRepository;
         this.jobService = jobService;
+        this.jobRepository = jobRepository;
     }
 
 
@@ -49,6 +53,13 @@ public class HomeServiceImpl implements HomeService {
             return addCompanyDetails(jobs);
         }
         return null;
+    }
+
+    @Override
+    public Set<Job> getAllJobsByJobType(String typeName) {
+        JobType jobType = JobType.valueOf(typeName);
+        Set<Job> jobs = jobRepository.findByJobType(jobType);
+        return addCompanyDetails(jobs);
     }
 
     @Override

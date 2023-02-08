@@ -1,22 +1,23 @@
 package in.getdreamjob.service.impl;
 
 import in.getdreamjob.model.Job;
-import in.getdreamjob.model.Location;
-import in.getdreamjob.model.Qualification;
 import in.getdreamjob.model.enums.JobType;
 import in.getdreamjob.repository.JobRepository;
 import in.getdreamjob.repository.LocationRepository;
 import in.getdreamjob.repository.QualificationRepository;
 import in.getdreamjob.service.HomeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class HomeServiceImpl implements HomeService {
+    public static final int PAGE_SIZE = 1;
     private LocationRepository locationRepository;
     private QualificationRepository qualificationRepository;
 
@@ -33,32 +34,30 @@ public class HomeServiceImpl implements HomeService {
         this.jobRepository = jobRepository;
     }
 
-
-    @Override
-    public Set<Job> getAllJobsByLocations(String locationName) {
-        Location location = locationRepository.findByName(locationName);
-        if (location != null) {
-            Set<Job> jobs = location.getJobs();
-            return addCompanyDetails(jobs);
-        }
-        return null;
-    }
-
-
-    @Override
-    public Set<Job> getAllJobsByQualifications(String qualificationName) {
-        Qualification qualification = qualificationRepository.findByName(qualificationName);
-        if (qualification != null) {
-            Set<Job> jobs = qualification.getJobs();
-            return addCompanyDetails(jobs);
-        }
-        return null;
+    private static PageRequest getPageRequest(int pageNo) {
+        PageRequest request = PageRequest.of(pageNo, PAGE_SIZE, Sort.Direction.DESC, "createdOn");
+        return request;
     }
 
     @Override
-    public Set<Job> getAllJobsByJobType(String typeName) {
+    public Page<Job> getAllJobsByLocations(String locationName, int pageNo) {
+        PageRequest request = getPageRequest(pageNo);
+        Page<Job> jobs = jobRepository.findByLocations_Name(locationName, request);
+        return addCompanyDetails(jobs);
+    }
+
+    @Override
+    public Page<Job> getAllJobsByQualifications(String qualificationName, int pageNo) {
+        PageRequest request = getPageRequest(pageNo);
+        Page<Job> jobs = jobRepository.findByQualifications_Name(qualificationName, request);
+        return addCompanyDetails(jobs);
+    }
+
+    @Override
+    public Page<Job> getAllJobsByJobType(String typeName, int pageNo) {
+        PageRequest request = getPageRequest(pageNo);
         JobType jobType = JobType.valueOf(typeName);
-        Set<Job> jobs = jobRepository.findByJobType(jobType);
+        Page<Job> jobs = jobRepository.findByJobType(jobType, request);
         return addCompanyDetails(jobs);
     }
 
@@ -82,7 +81,7 @@ public class HomeServiceImpl implements HomeService {
         return jobTypes;
     }
 
-    private Set<Job> addCompanyDetails(Set<Job> jobs) {
+    private Page<Job> addCompanyDetails(Page<Job> jobs) {
         for (Job job : jobs) {
             if (job.getCompany() != null) {
                 jobService.addCompanyDetails(job);

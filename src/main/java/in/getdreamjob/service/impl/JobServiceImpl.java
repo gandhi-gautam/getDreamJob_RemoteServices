@@ -6,14 +6,17 @@ import in.getdreamjob.repository.CompanyRepository;
 import in.getdreamjob.repository.JobRepository;
 import in.getdreamjob.service.JobService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.util.Date;
-import java.util.List;
 
 @Service
 public class JobServiceImpl implements JobService {
+    public static final int PAGE_SIZE = 1;
     private CompanyRepository companyRepository;
     private JobRepository jobRepository;
 
@@ -50,8 +53,9 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
-    public List<Job> getAllJobs() {
-        List<Job> jobs = jobRepository.findAll();
+    public Page<Job> getAllJobs(int pageNo) {
+        PageRequest request = PageRequest.of(pageNo, PAGE_SIZE, Sort.Direction.DESC, "createdOn");
+        Page<Job> jobs = jobRepository.findAll(request);
         for (Job job : jobs) {
             if (job.getCompany() != null) {
                 addCompanyDetails(job);

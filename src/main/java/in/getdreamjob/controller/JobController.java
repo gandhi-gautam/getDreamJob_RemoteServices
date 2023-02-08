@@ -30,9 +30,9 @@ public class JobController {
         return new ResponseEntity<>(jobService.updateJob(jobId, job), HttpStatus.OK);
     }
 
-    @GetMapping("/getAllJobs")
-    public ResponseEntity<?> getAllJobs() {
-        return new ResponseEntity<>(jobService.getAllJobs(), HttpStatus.OK);
+    @GetMapping("/getAllJobs/{pageNo}")
+    public ResponseEntity<?> getAllJobs(@PathVariable int pageNo) {
+        return new ResponseEntity<>(jobService.getAllJobs(pageNo), HttpStatus.OK);
     }
 
     @GetMapping("/getJob/{jobId}")

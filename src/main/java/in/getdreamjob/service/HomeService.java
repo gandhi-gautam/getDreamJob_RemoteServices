@@ -1,14 +1,14 @@
 package in.getdreamjob.service;
 
 import in.getdreamjob.model.Job;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
-import java.util.Set;
 
 public interface HomeService {
-    Set<Job> getAllJobsByLocations(String locationName);
+    Page<Job> getAllJobsByLocations(String locationName, int pageNo);
 
-    Set<Job> getAllJobsByQualifications(String qualificationName);
+    Page<Job> getAllJobsByQualifications(String qualificationName, int pageNo);
 
     List<String> getAllDistinctLocationNames();
 
@@ -16,5 +16,5 @@ public interface HomeService {
 
     List<String> getAllJobTypes();
 
-    Set<Job> getAllJobsByJobType(String typeName);
+    Page<Job> getAllJobsByJobType(String typeName, int pageNo);
 }

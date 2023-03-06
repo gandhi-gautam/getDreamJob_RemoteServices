@@ -57,7 +57,7 @@ public class Job {
     private JobAnalytics jobAnalytics;
 
     @JsonIgnore
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Company company;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = {

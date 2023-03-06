@@ -54,6 +54,16 @@ public class HomeServiceImpl implements HomeService {
     }
 
     @Override
+    public List<String> getAllJobTypes() {
+        List<String> jobTypes = new ArrayList<>();
+        JobType[] jobs = JobType.values();
+        for (JobType job : jobs) {
+            jobTypes.add(job.name());
+        }
+        return jobTypes;
+    }
+
+    @Override
     public Page<Job> getAllJobsByJobType(String typeName, int pageNo) {
         PageRequest request = getPageRequest(pageNo);
         JobType jobType = JobType.valueOf(typeName);
@@ -69,16 +79,6 @@ public class HomeServiceImpl implements HomeService {
     @Override
     public List<String> getAllDistinctQualificationNames() {
         return qualificationRepository.findDistinctQualificationName();
-    }
-
-    @Override
-    public List<String> getAllJobTypes() {
-        List<String> jobTypes = new ArrayList<>();
-        JobType[] jobs = JobType.values();
-        for (JobType job : jobs) {
-            jobTypes.add(job.name());
-        }
-        return jobTypes;
     }
 
     private Page<Job> addCompanyDetails(Page<Job> jobs) {

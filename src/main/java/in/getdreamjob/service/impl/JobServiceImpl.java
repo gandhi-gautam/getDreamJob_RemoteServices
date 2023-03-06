@@ -1,5 +1,6 @@
 package in.getdreamjob.service.impl;
 
+import in.getdreamjob.exception.ResourceNotFoundException;
 import in.getdreamjob.model.Company;
 import in.getdreamjob.model.Job;
 import in.getdreamjob.repository.CompanyRepository;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.util.Date;
+import java.util.Optional;
 
 @Service
 public class JobServiceImpl implements JobService {
@@ -32,24 +34,26 @@ public class JobServiceImpl implements JobService {
 
     @Override
     public Company createNewJob(long companyId, Job job) throws ParseException {
-        if (companyRepository.existsById(companyId)) {
-            Company company = companyRepository.findById(companyId).get();
+        Optional<Company> optional = companyRepository.findById(companyId);
+        if (optional.isPresent()) {
+            Company company = optional.get();
             job.setCreatedOn(new Date());
             job.setCompany(company);
             company.getJobs().add(job);
             return companyRepository.save(company);
         }
-        return null;
+        throw new ResourceNotFoundException("Company with id: " + companyId + " Not Found");
     }
 
     @Override
     public Job updateJob(long jobId, Job job) {
-        if (jobRepository.existsById(jobId)) {
-            Job actualJob = jobRepository.findById(jobId).get();
+        Optional<Job> optionalJob = jobRepository.findById(jobId);
+        if (optionalJob.isPresent()) {
+            Job actualJob = optionalJob.get();
             validateJobData(actualJob, job);
             return jobRepository.save(actualJob);
         }
-        return null;
+        throw new ResourceNotFoundException("Job with id: " + jobId + " Not Found");
     }
 
     @Override
@@ -66,14 +70,15 @@ public class JobServiceImpl implements JobService {
 
     @Override
     public Job getJob(long jobId) {
-        if (jobRepository.existsById(jobId)) {
-            Job job = jobRepository.findById(jobId).get();
-            addCompanyDetails(job);
+        Optional<Job> jobOptional = jobRepository.findById(jobId);
+        if (jobOptional.isPresent()) {
+            Job job = jobOptional.get();
             if (job.getCompany() != null) {
+                addCompanyDetails(job);
             }
             return job;
         }
-        return null;
+        throw new ResourceNotFoundException("Job with id: " + jobId + " not found");
     }
 
     private void validateJobData(Job actualJob, Job job) {

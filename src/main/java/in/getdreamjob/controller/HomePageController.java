@@ -21,12 +21,17 @@ public class HomePageController {
 
     @GetMapping("/location/{locationName}/{pageNo}")
     public ResponseEntity<?> getAllJobsByLocationName(@PathVariable String locationName, @PathVariable int pageNo) {
-        return new ResponseEntity<>(homeService.getAllJobsByLocations(locationName,pageNo), HttpStatus.OK);
+        return new ResponseEntity<>(homeService.getAllJobsByLocations(locationName, pageNo), HttpStatus.OK);
     }
 
     @GetMapping("/qualification/{qualificationName}/{pageNo}")
     public ResponseEntity<?> getAllJobsByQualification(@PathVariable String qualificationName, @PathVariable int pageNo) {
         return new ResponseEntity<>(homeService.getAllJobsByQualifications(qualificationName, pageNo), HttpStatus.OK);
+    }
+
+    @GetMapping("/jobType/{typeName}/{pageNo}")
+    public ResponseEntity<?> getAllJobsByJobType(@PathVariable String typeName, @PathVariable int pageNo) {
+        return new ResponseEntity<>(homeService.getAllJobsByJobType(typeName, pageNo), HttpStatus.OK);
     }
 
     @GetMapping("/locations")
@@ -42,10 +47,5 @@ public class HomePageController {
     @GetMapping("/jobTypes")
     public ResponseEntity<?> getAllDistinctJobTypeNames() {
         return new ResponseEntity<>(homeService.getAllJobTypes(), HttpStatus.OK);
-    }
-
-    @GetMapping("/jobType/{typeName}/{pageNo}")
-    public ResponseEntity<?> getAllJobsByJobType(@PathVariable String typeName, @PathVariable int pageNo){
-        return new ResponseEntity<>(homeService.getAllJobsByJobType(typeName, pageNo), HttpStatus.OK);
     }
 }

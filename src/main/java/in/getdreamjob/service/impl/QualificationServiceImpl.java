@@ -1,5 +1,7 @@
 package in.getdreamjob.service.impl;
 
+import in.getdreamjob.exception.ResourceAlreadyExistsException;
+import in.getdreamjob.exception.ResourceNotFoundException;
 import in.getdreamjob.model.Job;
 import in.getdreamjob.model.Qualification;
 import in.getdreamjob.repository.JobRepository;
@@ -8,6 +10,7 @@ import in.getdreamjob.service.QualificationService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class QualificationServiceImpl implements QualificationService {
@@ -25,8 +28,9 @@ public class QualificationServiceImpl implements QualificationService {
 
     @Override
     public Job createNewQualification(long jobId, Qualification qualification) {
-        if (jobRepository.existsById(jobId)) {
-            Job job = jobRepository.findById(jobId).get();
+        Optional<Job> optionalJob = jobRepository.findById(jobId);
+        if (optionalJob.isPresent()) {
+            Job job = optionalJob.get();
             qualification = checkUniqueQualification(qualification);
             job.getQualifications().add(qualification);
             qualification.getJobs().add(job);
@@ -34,7 +38,7 @@ public class QualificationServiceImpl implements QualificationService {
             jobService.addCompanyDetails(job);
             return job;
         }
-        return null;
+        throw new ResourceNotFoundException("Job With id: " + jobId + " Not found");
     }
 
     @Override
@@ -46,8 +50,10 @@ public class QualificationServiceImpl implements QualificationService {
                 validateQualificationData(actualQualification, qualification);
                 return qualificationRepository.save(actualQualification);
             }
+            throw new ResourceNotFoundException("Qualification with id: " + qualificationId + " Not Found");
         }
-        return null;
+        throw new ResourceAlreadyExistsException("Qualification with name: " + qualification.getName() + " Already " +
+                "exists");
     }
 
     @Override
@@ -57,10 +63,11 @@ public class QualificationServiceImpl implements QualificationService {
 
     @Override
     public Qualification getQualification(long qualificationId) {
-        if (qualificationRepository.existsById(qualificationId)) {
-            return qualificationRepository.findById(qualificationId).get();
+        Optional<Qualification> optionalQualification = qualificationRepository.findById(qualificationId);
+        if (optionalQualification.isPresent()) {
+            return optionalQualification.get();
         }
-        return null;
+        throw new ResourceNotFoundException("Qualification with id: " + qualificationId + " Not Found");
     }
 
     private void validateQualificationData(Qualification actualQualification, Qualification qualification) {

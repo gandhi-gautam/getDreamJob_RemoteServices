@@ -25,4 +25,13 @@ public class GlobalResourceException {
         errorResponse.setTimestamp(System.currentTimeMillis());
         return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
     }
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorResponse> emptyFieldException(EmptyFieldException emptyFieldException) {
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setStatusCode(HttpStatus.BAD_REQUEST.value());
+        errorResponse.setMessage(emptyFieldException.getMessage());
+        errorResponse.setTimestamp(System.currentTimeMillis());
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
 }

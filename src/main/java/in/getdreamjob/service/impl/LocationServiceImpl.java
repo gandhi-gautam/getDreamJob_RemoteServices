@@ -1,5 +1,7 @@
 package in.getdreamjob.service.impl;
 
+import in.getdreamjob.exception.ResourceAlreadyExistsException;
+import in.getdreamjob.exception.ResourceNotFoundException;
 import in.getdreamjob.model.Job;
 import in.getdreamjob.model.Location;
 import in.getdreamjob.repository.JobRepository;
@@ -9,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class LocationServiceImpl implements LocationService {
@@ -29,8 +32,9 @@ public class LocationServiceImpl implements LocationService {
 
     @Override
     public Job createNewLocation(long jobId, Location location) {
-        if (jobRepository.existsById(jobId)) {
-            Job job = jobRepository.findById(jobId).get();
+        Optional<Job> jobOptional = jobRepository.findById(jobId);
+        if (jobOptional.isPresent()) {
+            Job job = jobOptional.get();
             location = checkUniqueLocation(location);
             job.getLocations().add(location);
             location.getJobs().add(job);
@@ -38,20 +42,22 @@ public class LocationServiceImpl implements LocationService {
             jobService.addCompanyDetails(job);
             return job;
         }
-        return null;
+        throw new ResourceNotFoundException("Job with Id: " + jobId + " Not Found");
     }
 
     @Override
     public Location updateLocation(long jobId, long locationId, Location location) {
         Location tempLocation = locationRepository.findByName(location.getName());
         if (tempLocation == null) {
-            if (locationRepository.existsById(locationId)) {
-                Location actualLocation = locationRepository.findById(locationId).get();
+            Optional<Location> optionalLocation = locationRepository.findById(locationId);
+            if (optionalLocation.isPresent()) {
+                Location actualLocation = optionalLocation.get();
                 validateLocationData(actualLocation, location);
                 return locationRepository.save(actualLocation);
             }
+            throw new ResourceNotFoundException("Location with Id: " + locationId + " not Found");
         }
-        return null;
+        throw new ResourceAlreadyExistsException("Location with name: " + location.getName() + " Already exists");
     }
 
     @Override
@@ -61,10 +67,11 @@ public class LocationServiceImpl implements LocationService {
 
     @Override
     public Location getLocation(long locationId) {
-        if (locationRepository.existsById(locationId)) {
-            return locationRepository.findById(locationId).get();
+        Optional<Location> locationOptional = locationRepository.findById(locationId);
+        if (locationOptional.isPresent()) {
+            return locationOptional.get();
         }
-        return null;
+        throw new ResourceNotFoundException("Location with id: " + locationId + " Not Found");
     }
 
     private void validateLocationData(Location actualLocation, Location location) {

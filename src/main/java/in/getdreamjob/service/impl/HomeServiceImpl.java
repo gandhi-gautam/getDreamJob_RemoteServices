@@ -17,7 +17,7 @@ import java.util.List;
 
 @Service
 public class HomeServiceImpl implements HomeService {
-    public static final int PAGE_SIZE = 1;
+    public static final int PAGE_SIZE = 100;
     private LocationRepository locationRepository;
     private QualificationRepository qualificationRepository;
 

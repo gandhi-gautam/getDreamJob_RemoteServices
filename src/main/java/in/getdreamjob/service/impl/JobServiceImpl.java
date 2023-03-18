@@ -120,6 +120,11 @@ public class JobServiceImpl implements JobService {
         }
     }
 
+    /**
+     * This method fetched company details from the database and set inside the job
+     *
+     * @param job
+     */
     public void addCompanyDetails(Job job) {
         if (job.getCompany().getId() != 0) {
             job.setCompanyId(job.getCompany().getId());

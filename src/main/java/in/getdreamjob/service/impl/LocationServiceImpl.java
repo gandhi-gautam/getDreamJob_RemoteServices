@@ -1,5 +1,6 @@
 package in.getdreamjob.service.impl;
 
+import in.getdreamjob.exception.EmptyFieldException;
 import in.getdreamjob.exception.ResourceAlreadyExistsException;
 import in.getdreamjob.exception.ResourceNotFoundException;
 import in.getdreamjob.model.Job;
@@ -30,17 +31,28 @@ public class LocationServiceImpl implements LocationService {
     }
 
 
+    /**
+     * This method creates new location, it needs job id that is mandatory. location saved is linked with the particular
+     * job.
+     *
+     * @param jobId
+     * @param location
+     * @return
+     */
     @Override
     public Job createNewLocation(long jobId, Location location) {
         Optional<Job> jobOptional = jobRepository.findById(jobId);
         if (jobOptional.isPresent()) {
             Job job = jobOptional.get();
-            location = checkUniqueLocation(location);
-            job.getLocations().add(location);
-            location.getJobs().add(job);
-            job = jobRepository.save(job);
-            jobService.addCompanyDetails(job);
-            return job;
+            if (location.getName() != null) {
+                location = checkUniqueLocation(location);
+                job.getLocations().add(location);
+                location.getJobs().add(job);
+                job = jobRepository.save(job);
+                jobService.addCompanyDetails(job);
+                return job;
+            }
+            throw new EmptyFieldException("Location name not provided in payload");
         }
         throw new ResourceNotFoundException("Job with Id: " + jobId + " Not Found");
     }
@@ -81,7 +93,16 @@ public class LocationServiceImpl implements LocationService {
     }
 
 
+    /**
+     * This
+     * This method checks if the location name is already exists in the database if yes then return that location
+     * if not then return new location that will be used to saved in the database
+     *
+     * @param location
+     * @return
+     */
     private Location checkUniqueLocation(Location location) {
+        location.setName(location.getName().toLowerCase());
         Location tempLocation = locationRepository.findByName(location.getName());
         if (tempLocation != null) {
             return tempLocation;

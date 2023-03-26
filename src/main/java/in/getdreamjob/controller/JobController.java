@@ -7,9 +7,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
+
 @RestController
 @RequestMapping("/api/v1")
-@CrossOrigin(origins = "http://localhost:3000")
 public class JobController {
     private JobService jobService;
 
@@ -19,7 +20,7 @@ public class JobController {
     }
 
     @PostMapping("/createNewJob/{companyId}")
-    public ResponseEntity<?> createNewJob(@PathVariable long companyId, @RequestBody Job job) {
+    public ResponseEntity<?> createNewJob(@PathVariable long companyId, @RequestBody Job job) throws ParseException {
         return new ResponseEntity<>(jobService.createNewJob(companyId, job), HttpStatus.CREATED);
     }
 
@@ -28,9 +29,9 @@ public class JobController {
         return new ResponseEntity<>(jobService.updateJob(jobId, job), HttpStatus.OK);
     }
 
-    @GetMapping("/getAllJobs")
-    public ResponseEntity<?> getAllJobs() {
-        return new ResponseEntity<>(jobService.getAllJobs(), HttpStatus.OK);
+    @GetMapping("/getAllJobs/{pageNo}")
+    public ResponseEntity<?> getAllJobs(@PathVariable int pageNo) {
+        return new ResponseEntity<>(jobService.getAllJobs(pageNo), HttpStatus.OK);
     }
 
     @GetMapping("/getJob/{jobId}")

@@ -1,5 +1,8 @@
 package in.getdreamjob.service.impl;
 
+import in.getdreamjob.exception.EmptyFieldException;
+import in.getdreamjob.exception.ResourceAlreadyExistsException;
+import in.getdreamjob.exception.ResourceNotFoundException;
 import in.getdreamjob.model.Company;
 import in.getdreamjob.repository.CompanyRepository;
 import in.getdreamjob.service.CompanyService;
@@ -20,7 +23,13 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public Company createNewCompany(Company company) {
-        if (company != null) {
+        boolean isValidated = validateData(company);
+        if (isValidated) {
+            Optional optional = companyRepository.findByName(company.getName());
+            if (optional.isPresent()) {
+                throw new ResourceAlreadyExistsException("Company Already exists in the Database with name: " +
+                        company.getName());
+            }
             return companyRepository.save(company);
         }
         return null;
@@ -28,18 +37,15 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public Company updateCompany(long companyId, Company company) {
-        Optional<Company> optionalCompany = null;
-        if (companyRepository.existsById(companyId)) {
-            optionalCompany = companyRepository.findById(companyId);
-            if (optionalCompany.isPresent()) {
-                Company actualCompany = optionalCompany.get();
-                validateCompanyData(actualCompany, company);
-                return companyRepository.save(actualCompany);
-            }
+        Optional<Company> optionalCompany = companyRepository.findById(companyId);
+        if (optionalCompany.isPresent()) {
+            Company actualCompany = optionalCompany.get();
+            validateCompanyData(actualCompany, company);
+            return companyRepository.save(actualCompany);
+        } else {
+            throw new ResourceNotFoundException("Try to update company data, company data not exist in the database " +
+                    "for id: " + companyId);
         }
-
-        // if not exists then add exception case
-        return null;
     }
 
     @Override
@@ -49,23 +55,42 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public Company getCompany(long companyId) {
-        if (companyRepository.existsById(companyId)) {
-            Optional<Company> optionalCompany = companyRepository.findById(companyId);
-            if (optionalCompany.isPresent()) {
-                return optionalCompany.get();
-            }
+        Optional<Company> optionalCompany = companyRepository.findById(companyId);
+        if (optionalCompany.isPresent()) {
+            return optionalCompany.get();
+        } else {
+            throw new ResourceNotFoundException("Company not found in the database with Id: " + companyId);
         }
-        // create an exception situation where to raise exception when company not present
-        return new Company();
     }
 
     private void validateCompanyData(Company actualCompany, Company company) {
         if (company.getName() != null && !company.getName().isEmpty()) {
+            Optional<Company> optional = companyRepository.findByName(company.getName());
+            if (optional.isPresent() && optional.get().getId() != company.getId()) {
+                throw new ResourceAlreadyExistsException("Cannot change name of the company, name " + company.getName()
+                        + " Already exists");
+            }
             actualCompany.setName(company.getName());
         }
 
         if (company.getOfficialWebsite() != null && !company.getOfficialWebsite().isEmpty()) {
             actualCompany.setOfficialWebsite(company.getOfficialWebsite());
         }
+    }
+
+    private boolean validateData(Company company) {
+        if (company == null) {
+            throw new EmptyFieldException("Company data not provided in the payload");
+        }
+
+        if (company.getName() == null) {
+            throw new EmptyFieldException("Company Name not provided in payload");
+        }
+
+        if (company.getOfficialWebsite() == null) {
+            throw new EmptyFieldException("Company official website not provided in payload");
+        }
+
+        return true;
     }
 }

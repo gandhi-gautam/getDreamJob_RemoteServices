@@ -16,6 +16,6 @@ public class Company {
     private long id;
     private String name;
     private String officialWebsite;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "company")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "company", fetch = FetchType.LAZY)
     private Set<Job> jobs = new HashSet<>();
 }

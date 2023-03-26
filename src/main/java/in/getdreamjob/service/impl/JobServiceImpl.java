@@ -1,17 +1,24 @@
 package in.getdreamjob.service.impl;
 
+import in.getdreamjob.exception.ResourceNotFoundException;
 import in.getdreamjob.model.Company;
 import in.getdreamjob.model.Job;
 import in.getdreamjob.repository.CompanyRepository;
 import in.getdreamjob.repository.JobRepository;
 import in.getdreamjob.service.JobService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.text.ParseException;
+import java.util.Date;
+import java.util.Optional;
 
 @Service
 public class JobServiceImpl implements JobService {
+    public static final int PAGE_SIZE = 100;
     private CompanyRepository companyRepository;
     private JobRepository jobRepository;
 
@@ -26,42 +33,36 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
-    public Company createNewJob(long companyId, Job job) {
-        if (companyRepository.existsById(companyId)) {
-            Company company = companyRepository.findById(companyId).get();
-            job.setCreatedOn(new java.util.Date());
+    public Company createNewJob(long companyId, Job job) throws ParseException {
+        Optional<Company> optional = companyRepository.findById(companyId);
+        if (optional.isPresent()) {
+            Company company = optional.get();
+            job.setCreatedOn(new Date());
             job.setCompany(company);
             company.getJobs().add(job);
             return companyRepository.save(company);
         }
-        return null;
+        throw new ResourceNotFoundException("Company with id: " + companyId + " Not Found");
     }
 
     @Override
     public Job updateJob(long jobId, Job job) {
-        if (jobRepository.existsById(jobId)) {
-            Job actualJob = jobRepository.findById(jobId).get();
+        Optional<Job> optionalJob = jobRepository.findById(jobId);
+        if (optionalJob.isPresent()) {
+            Job actualJob = optionalJob.get();
             validateJobData(actualJob, job);
             return jobRepository.save(actualJob);
         }
-        return null;
+        throw new ResourceNotFoundException("Job with id: " + jobId + " Not Found");
     }
 
     @Override
-    public List<Job> getAllJobs() {
-        List<Job> jobs = jobRepository.findAll();
+    public Page<Job> getAllJobs(int pageNo) {
+        PageRequest request = PageRequest.of(pageNo, PAGE_SIZE, Sort.Direction.DESC, "createdOn");
+        Page<Job> jobs = jobRepository.findAll(request);
         for (Job job : jobs) {
             if (job.getCompany() != null) {
-                if (job.getCompany().getId() != 0) {
-                    job.setCompanyId(job.getCompany().getId());
-                }
-                if (job.getCompany().getName() != null && !job.getCompany().getName().isEmpty()) {
-                    job.setCompanyName(job.getCompany().getName());
-                }
-
-                if (job.getCompany().getOfficialWebsite() != null && !job.getCompany().getOfficialWebsite().isEmpty()) {
-                    job.setCompanyOfficialWebsite(job.getCompany().getOfficialWebsite());
-                }
+                addCompanyDetails(job);
             }
         }
         return jobs;
@@ -69,23 +70,15 @@ public class JobServiceImpl implements JobService {
 
     @Override
     public Job getJob(long jobId) {
-        if (jobRepository.existsById(jobId)) {
-            Job job = jobRepository.findById(jobId).get();
+        Optional<Job> jobOptional = jobRepository.findById(jobId);
+        if (jobOptional.isPresent()) {
+            Job job = jobOptional.get();
             if (job.getCompany() != null) {
-                if (job.getCompany().getId() != 0) {
-                    job.setCompanyId(job.getCompany().getId());
-                }
-                if (job.getCompany().getName() != null && !job.getCompany().getName().isEmpty()) {
-                    job.setCompanyName(job.getCompany().getName());
-                }
-
-                if (job.getCompany().getOfficialWebsite() != null && !job.getCompany().getOfficialWebsite().isEmpty()) {
-                    job.setCompanyOfficialWebsite(job.getCompany().getOfficialWebsite());
-                }
+                addCompanyDetails(job);
             }
             return job;
         }
-        return null;
+        throw new ResourceNotFoundException("Job with id: " + jobId + " not found");
     }
 
     private void validateJobData(Job actualJob, Job job) {
@@ -102,7 +95,7 @@ public class JobServiceImpl implements JobService {
             actualJob.setMinSalary(job.getMinSalary());
         }
         if (job.getMaxSalary() != null && !job.getMaxSalary().isEmpty()) {
-            actualJob.setMinSalary(job.getMaxSalary());
+            actualJob.setMaxSalary(job.getMaxSalary());
         }
         if (job.getApplicationMode() != null && !job.getApplicationMode().isEmpty()) {
             actualJob.setApplicationMode(job.getApplicationMode());
@@ -124,6 +117,24 @@ public class JobServiceImpl implements JobService {
         }
         if (job.getImage() != null && job.getImage().length > 0) {
             actualJob.setImage(job.getImage());
+        }
+    }
+
+    /**
+     * This method fetched company details from the database and set inside the job
+     *
+     * @param job
+     */
+    public void addCompanyDetails(Job job) {
+        if (job.getCompany().getId() != 0) {
+            job.setCompanyId(job.getCompany().getId());
+        }
+        if (job.getCompany().getName() != null && !job.getCompany().getName().isEmpty()) {
+            job.setCompanyName(job.getCompany().getName());
+        }
+
+        if (job.getCompany().getOfficialWebsite() != null && !job.getCompany().getOfficialWebsite().isEmpty()) {
+            job.setCompanyOfficialWebsite(job.getCompany().getOfficialWebsite());
         }
     }
 }

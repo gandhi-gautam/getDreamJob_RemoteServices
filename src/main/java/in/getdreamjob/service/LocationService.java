@@ -13,4 +13,5 @@ public interface LocationService {
     public List<Location> getAllLocations();
 
     public Location getLocation(long locationId);
+    public Boolean deleteLocationFromAJob(long jobId, long locationId);
 }

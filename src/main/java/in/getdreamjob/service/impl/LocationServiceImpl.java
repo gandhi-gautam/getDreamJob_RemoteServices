@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class LocationServiceImpl implements LocationService {
@@ -59,7 +60,7 @@ public class LocationServiceImpl implements LocationService {
 
     @Override
     public Location updateLocation(long jobId, long locationId, Location location) {
-        Location tempLocation = locationRepository.findByName(location.getName());
+        Location tempLocation = locationRepository.findByName(location.getName().toLowerCase());
         if (tempLocation == null) {
             Optional<Location> optionalLocation = locationRepository.findById(locationId);
             if (optionalLocation.isPresent()) {
@@ -86,9 +87,32 @@ public class LocationServiceImpl implements LocationService {
         throw new ResourceNotFoundException("Location with id: " + locationId + " Not Found");
     }
 
+    /**
+     * This method delete the location from the job
+     *
+     * @param jobId
+     * @param locationId
+     * @return
+     */
+    @Override
+    public Boolean deleteLocationFromAJob(long jobId, long locationId) {
+        Optional<Job> jobOptional = jobRepository.findById(jobId);
+        if (jobOptional.isPresent()) {
+            Optional<Location> optionalLocation = locationRepository.findById(locationId);
+            if (optionalLocation.isPresent()) {
+                Set<Location> locations = jobOptional.get().getLocations();
+                locations.remove(optionalLocation.get());
+                jobRepository.save(jobOptional.get());
+                return true;
+            }
+            throw new ResourceNotFoundException("Location with Id: " + locationId + " Not Found!");
+        }
+        throw new ResourceNotFoundException("Job with Id: " + jobId + " Not Found!");
+    }
+
     private void validateLocationData(Location actualLocation, Location location) {
         if (location.getName() != null && !location.getName().isEmpty()) {
-            actualLocation.setName(location.getName());
+            actualLocation.setName(location.getName().toLowerCase());
         }
     }
 

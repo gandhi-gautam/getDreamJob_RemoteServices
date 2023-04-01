@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class QualificationServiceImpl implements QualificationService {
@@ -43,10 +44,11 @@ public class QualificationServiceImpl implements QualificationService {
 
     @Override
     public Qualification updateQualification(long jobId, long qualificationId, Qualification qualification) {
-        Qualification tempQualification = qualificationRepository.findByName(qualification.getName());
+        Qualification tempQualification = qualificationRepository.findByName(qualification.getName().toLowerCase());
         if (tempQualification == null) {
-            if (qualificationRepository.existsById(qualificationId)) {
-                Qualification actualQualification = qualificationRepository.findById(qualificationId).get();
+            Optional<Qualification> optionalQualification = qualificationRepository.findById(qualificationId);
+            if (optionalQualification.isPresent()) {
+                Qualification actualQualification = optionalQualification.get();
                 validateQualificationData(actualQualification, qualification);
                 return qualificationRepository.save(actualQualification);
             }
@@ -70,13 +72,30 @@ public class QualificationServiceImpl implements QualificationService {
         throw new ResourceNotFoundException("Qualification with id: " + qualificationId + " Not Found");
     }
 
+    @Override
+    public Boolean deleteQualificationFromAJob(long jobId, long qualificationId) {
+        Optional<Job> jobOptional = jobRepository.findById(jobId);
+        if (jobOptional.isPresent()) {
+            Optional<Qualification> optionalQualification = qualificationRepository.findById(qualificationId);
+            if (optionalQualification.isPresent()) {
+                Set<Qualification> qualifications = jobOptional.get().getQualifications();
+                qualifications.remove(optionalQualification.get());
+                jobRepository.save(jobOptional.get());
+                return true;
+            }
+            throw new ResourceNotFoundException("Qualification with Id: " + qualificationId + " Not Found!");
+        }
+        throw new ResourceNotFoundException("Job with Id: " + jobId + " Not Found!");
+    }
+
     private void validateQualificationData(Qualification actualQualification, Qualification qualification) {
         if (qualification.getName() != null && !qualification.getName().isEmpty()) {
-            actualQualification.setName(qualification.getName());
+            actualQualification.setName(qualification.getName().toLowerCase());
         }
     }
 
     private Qualification checkUniqueQualification(Qualification qualification) {
+        qualification.setName(qualification.getName().toLowerCase());
         Qualification tempQualification = qualificationRepository.findByName(qualification.getName());
         if (tempQualification != null) {
             return tempQualification;

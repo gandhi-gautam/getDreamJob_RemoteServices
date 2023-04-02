@@ -9,6 +9,7 @@ import in.getdreamjob.repository.QualificationRepository;
 import in.getdreamjob.service.QualificationService;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -86,6 +87,23 @@ public class QualificationServiceImpl implements QualificationService {
             throw new ResourceNotFoundException("Qualification with Id: " + qualificationId + " Not Found!");
         }
         throw new ResourceNotFoundException("Job with Id: " + jobId + " Not Found!");
+    }
+
+    @Override
+    public Object deleteQualification(long qualificationId) {
+        Optional<Qualification> optionalQualification = qualificationRepository.findById(qualificationId);
+        if (optionalQualification.isPresent()) {
+            Qualification qualification = optionalQualification.get();
+            Set<Job> jobs = qualification.getJobs();
+            for (Job job : jobs) {
+                job.getQualifications().remove(qualification);
+            }
+            qualification.setJobs(new HashSet<>());
+            qualificationRepository.delete(qualification);
+        } else {
+            throw new ResourceNotFoundException("Qualification with Id: " + qualificationId + " Not Found!");
+        }
+        return null;
     }
 
     private void validateQualificationData(Qualification actualQualification, Qualification qualification) {

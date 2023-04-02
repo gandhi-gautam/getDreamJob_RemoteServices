@@ -72,7 +72,8 @@ public class Job {
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = {
             CascadeType.PERSIST,
-            CascadeType.MERGE
+            CascadeType.MERGE,
+            CascadeType.REFRESH
     })
     @JoinTable(name = "job_qualifications",
             joinColumns = {@JoinColumn(name = "job_id")},

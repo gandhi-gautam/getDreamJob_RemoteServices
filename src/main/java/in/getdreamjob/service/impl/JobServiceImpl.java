@@ -81,6 +81,20 @@ public class JobServiceImpl implements JobService {
         throw new ResourceNotFoundException("Job with id: " + jobId + " not found");
     }
 
+    @Override
+    public Object deleteJob(long jobId) {
+
+        Optional<Job> optionalJob = jobRepository.findById(jobId);
+        if (optionalJob.isPresent()) {
+            Job job = optionalJob.get();
+            job.setCompany(null);
+            jobRepository.delete(job);
+        } else {
+            throw new ResourceNotFoundException("Job with id: " + jobId + " not found");
+        }
+        return null;
+    }
+
     private void validateJobData(Job actualJob, Job job) {
         if (job.getProfileName() != null && !job.getProfileName().isEmpty()) {
             actualJob.setProfileName(job.getProfileName());

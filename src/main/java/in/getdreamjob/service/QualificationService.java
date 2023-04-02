@@ -17,4 +17,6 @@ public interface QualificationService {
     public Qualification getQualification(long qualificationId);
 
     Boolean deleteQualificationFromAJob(long jobId, long qualificationId);
+
+    Object deleteQualification(long qualificationId);
 }

@@ -12,4 +12,6 @@ public interface CompanyService {
     public List<Company> getAllCompanies();
 
     public Company getCompany(long companyId);
+
+    Object deleteCompany(long companyId);
 }

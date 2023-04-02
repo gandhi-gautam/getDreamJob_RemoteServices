@@ -11,6 +11,7 @@ import in.getdreamjob.service.LocationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -108,6 +109,23 @@ public class LocationServiceImpl implements LocationService {
             throw new ResourceNotFoundException("Location with Id: " + locationId + " Not Found!");
         }
         throw new ResourceNotFoundException("Job with Id: " + jobId + " Not Found!");
+    }
+
+    @Override
+    public Object deleteLocation(long locationId) {
+        Optional<Location> optionalLocation = locationRepository.findById(locationId);
+        if (optionalLocation.isPresent()) {
+            Location location = optionalLocation.get();
+            Set<Job> jobs = location.getJobs();
+            for (Job job : jobs) {
+                job.getLocations().remove(location);
+            }
+            location.setJobs(new HashSet<>());
+            locationRepository.delete(location);
+        } else {
+            throw new ResourceNotFoundException("Location with Id: " + locationId + " Not Found!");
+        }
+        return null;
     }
 
     private void validateLocationData(Location actualLocation, Location location) {

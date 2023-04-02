@@ -39,8 +39,13 @@ public class QualificationController {
     }
 
     @PostMapping("/{jobId}/{qualificationId}")
-    public ResponseEntity<?> deleteLocationFromJob(@PathVariable long jobId, @PathVariable long qualificationId){
+    public ResponseEntity<?> deleteLocationFromJob(@PathVariable long jobId, @PathVariable long qualificationId) {
         return new ResponseEntity<>(qualificationService
-                    .deleteQualificationFromAJob(jobId, qualificationId), HttpStatus.OK);
+                .deleteQualificationFromAJob(jobId, qualificationId), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{qualificationId}")
+    public ResponseEntity<?> deleteQualificationById(@PathVariable long qualificationId) {
+        return new ResponseEntity<>(qualificationService.deleteQualification(qualificationId), HttpStatus.OK);
     }
 }

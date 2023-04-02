@@ -4,17 +4,21 @@ import in.getdreamjob.exception.EmptyFieldException;
 import in.getdreamjob.exception.ResourceAlreadyExistsException;
 import in.getdreamjob.exception.ResourceNotFoundException;
 import in.getdreamjob.model.Company;
+import in.getdreamjob.model.Job;
 import in.getdreamjob.repository.CompanyRepository;
+import in.getdreamjob.repository.JobRepository;
 import in.getdreamjob.service.CompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class CompanyServiceImpl implements CompanyService {
     private CompanyRepository companyRepository;
+    private JobRepository jobRepository;
 
     @Autowired
     public void setCompanyRepository(CompanyRepository companyRepository) {
@@ -61,6 +65,21 @@ public class CompanyServiceImpl implements CompanyService {
         } else {
             throw new ResourceNotFoundException("Company not found in the database with Id: " + companyId);
         }
+    }
+
+    @Override
+    public Object deleteCompany(long companyId) {
+        Optional<Company> companyOptional = companyRepository.findById(companyId);
+        if (companyOptional.isPresent()) {
+            Set<Job> jobs = companyOptional.get().getJobs();
+            for (Job job : jobs) {
+                jobRepository.delete(job);
+            }
+            companyRepository.delete(companyOptional.get());
+        } else {
+            throw new ResourceNotFoundException("Company not found in the database with Id: " + companyId);
+        }
+        return null;
     }
 
     private void validateCompanyData(Company actualCompany, Company company) {

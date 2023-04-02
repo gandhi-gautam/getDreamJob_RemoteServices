@@ -30,6 +30,7 @@ public class SecurityConfig {
                 .authorizeRequests(auth -> {
                     auth.antMatchers(HttpMethod.POST, "/api/v1/**").hasAnyRole("ADMIN");
                     auth.antMatchers(HttpMethod.PUT, "/api/v1/**").hasAnyRole("ADMIN");
+                    auth.antMatchers(HttpMethod.DELETE, "/api/v1/**").hasAnyRole("ADMIN");
                 })
                 .httpBasic(Customizer.withDefaults())
                 .build();

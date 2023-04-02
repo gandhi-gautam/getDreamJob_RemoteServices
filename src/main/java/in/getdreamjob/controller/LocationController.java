@@ -36,4 +36,14 @@ public class LocationController {
     public ResponseEntity<?> getLocationById(@PathVariable long locationId) {
         return new ResponseEntity<>(locationService.getLocation(locationId), HttpStatus.OK);
     }
+
+    @PostMapping("/{jobId}/{locationId}")
+    public ResponseEntity<?> deleteLocationFromJob(@PathVariable long jobId, @PathVariable long locationId) {
+        return new ResponseEntity<>(locationService.deleteLocationFromAJob(jobId, locationId), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{locationId}")
+    public ResponseEntity<?> deleteLocationById(@PathVariable long locationId) {
+        return new ResponseEntity<>(locationService.deleteLocation(locationId), HttpStatus.OK);
+    }
 }

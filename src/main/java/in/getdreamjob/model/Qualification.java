@@ -21,7 +21,8 @@ public class Qualification {
     @ManyToMany(fetch = FetchType.LAZY,
             cascade = {
                     CascadeType.PERSIST,
-                    CascadeType.MERGE
+                    CascadeType.MERGE,
+                    CascadeType.REFRESH
             }, mappedBy = "qualifications")
     private Set<Job> jobs = new HashSet<>();
 }

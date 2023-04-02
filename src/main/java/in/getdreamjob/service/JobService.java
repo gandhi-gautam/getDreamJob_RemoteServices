@@ -15,4 +15,6 @@ public interface JobService {
     public Page<Job> getAllJobs(int pageNo);
 
     public Job getJob(long jobId);
+
+    Object deleteJob(long jobId);
 }

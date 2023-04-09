@@ -2,6 +2,8 @@ package in.getdreamjob.service.impl;
 
 import in.getdreamjob.model.Job;
 import in.getdreamjob.model.enums.JobType;
+import in.getdreamjob.model.enums.Locations;
+import in.getdreamjob.model.enums.Qualifications;
 import in.getdreamjob.repository.JobRepository;
 import in.getdreamjob.repository.LocationRepository;
 import in.getdreamjob.repository.QualificationRepository;
@@ -73,12 +75,20 @@ public class HomeServiceImpl implements HomeService {
 
     @Override
     public List<String> getAllDistinctLocationNames() {
-        return locationRepository.findDistinctLocationName();
+        List<String> locations = new ArrayList<>();
+        for (Locations job : Locations.values()) {
+            locations.add(job.name());
+        }
+        return locations;
     }
 
     @Override
     public List<String> getAllDistinctQualificationNames() {
-        return qualificationRepository.findDistinctQualificationName();
+        List<String> qualifications = new ArrayList<>();
+        for (Qualifications qualification : Qualifications.values()) {
+            qualifications.add(qualification.getDisplayName());
+        }
+        return qualifications;
     }
 
     private Page<Job> addCompanyDetails(Page<Job> jobs) {

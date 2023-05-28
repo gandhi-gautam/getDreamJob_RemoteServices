@@ -13,4 +13,6 @@ public interface QualificationRepository extends JpaRepository<Qualification, Lo
 
     @Query("SELECT DISTINCT q.name from Qualification q")
     List<String> findDistinctQualificationName();
+
+    boolean existsByName(String name);
 }

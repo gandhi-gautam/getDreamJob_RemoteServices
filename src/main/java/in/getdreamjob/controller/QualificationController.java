@@ -52,6 +52,4 @@ public class QualificationController {
     public ResponseEntity<?> deleteQualificationById(@PathVariable long qualificationId) {
         return new ResponseEntity<>(qualificationService.deleteQualification(qualificationId), HttpStatus.OK);
     }
-
-
 }

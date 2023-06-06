@@ -80,4 +80,15 @@ public class Job {
             inverseJoinColumns = {@JoinColumn(name = "qualification_id")}
     )
     private Set<Qualification> qualifications = new HashSet<>();
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE,
+            CascadeType.REFRESH
+    })
+    @JoinTable(name = "job_categories",
+            joinColumns = {@JoinColumn(name = "job_id")},
+            inverseJoinColumns = {@JoinColumn(name = "category_id")}
+    )
+    private Set<Category> categories = new HashSet<>();
 }

@@ -14,4 +14,5 @@ public interface LocationRepository extends JpaRepository<Location, Long> {
     @Query("SELECT DISTINCT l.name from Location l")
     List<String> findDistinctLocationName();
 
+    boolean existsByName(String name);
 }

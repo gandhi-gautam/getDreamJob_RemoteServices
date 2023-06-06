@@ -10,36 +10,41 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1/location")
 public class LocationController {
-    private LocationService locationService;
+    private final LocationService locationService;
 
     @Autowired
     public LocationController(LocationService locationService) {
         this.locationService = locationService;
     }
 
-    @PostMapping("/{jobId}")
-    public ResponseEntity<?> createNewLocation(@PathVariable long jobId, @RequestBody Location location) {
-        return new ResponseEntity<>(locationService.createNewLocation(jobId, location), HttpStatus.CREATED);
+    @PostMapping
+    public ResponseEntity<?> createNewLocation(@RequestBody Location location) {
+        return new ResponseEntity<>(locationService.createNewLocation(location), HttpStatus.CREATED);
     }
 
-    @PutMapping("/{jobId}/{locationId}")
-    public ResponseEntity<?> updateLocation(@PathVariable long jobId, @PathVariable long locationId, @RequestBody Location location) {
-        return new ResponseEntity<>(locationService.updateLocation(jobId, locationId, location), HttpStatus.OK);
+    @PutMapping
+    public ResponseEntity<?> updateLocation(@RequestBody Location location) {
+        return new ResponseEntity<>(locationService.updateLocation(location), HttpStatus.OK);
     }
 
-    @GetMapping("/all")
+    @GetMapping
     public ResponseEntity<?> getAllLocations() {
         return new ResponseEntity<>(locationService.getAllLocations(), HttpStatus.OK);
     }
 
-    @GetMapping("/{locationId}")
-    public ResponseEntity<?> getLocationById(@PathVariable long locationId) {
+    @GetMapping("/{locationName}/{locationId}")
+    public ResponseEntity<?> getLocationById(@PathVariable String locationName, @PathVariable long locationId) {
         return new ResponseEntity<>(locationService.getLocation(locationId), HttpStatus.OK);
     }
 
-    @PostMapping("/{jobId}/{locationId}")
+    @DeleteMapping("/{jobId}/{locationId}")
     public ResponseEntity<?> deleteLocationFromJob(@PathVariable long jobId, @PathVariable long locationId) {
         return new ResponseEntity<>(locationService.deleteLocationFromAJob(jobId, locationId), HttpStatus.OK);
+    }
+
+    @PostMapping("/{jobId}/{locationId}")
+    public ResponseEntity<?> connectLocationFromJob(@PathVariable long jobId, @PathVariable long locationId) {
+        return new ResponseEntity<>(locationService.connectLocationFromJob(jobId, locationId), HttpStatus.OK);
     }
 
     @DeleteMapping("/{locationId}")

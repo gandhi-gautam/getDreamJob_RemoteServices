@@ -1,17 +1,16 @@
 package in.getdreamjob.service;
 
 import in.getdreamjob.model.Company;
-
-import java.util.List;
+import in.getdreamjob.model.GeneralResponse;
 
 public interface CompanyService {
-    public Company createNewCompany(Company company);
+    public GeneralResponse createNewCompany(Company company);
 
-    public Company updateCompany(long companyId, Company company);
+    public GeneralResponse updateCompany(Company company);
 
-    public List<Company> getAllCompanies();
+    public GeneralResponse getAllCompanies();
 
-    public Company getCompany(long companyId);
+    public GeneralResponse getCompany(long companyId);
 
-    Object deleteCompany(long companyId);
+    public GeneralResponse deleteCompany(long companyId);
 }

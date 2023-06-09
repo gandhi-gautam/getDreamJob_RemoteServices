@@ -25,15 +25,13 @@ public class LocationServiceImpl implements LocationService {
     private final static Logger logger = LoggerFactory.getLogger(LocationServiceImpl.class);
     private final LocationRepository locationRepository;
     private final JobRepository jobRepository;
-    private final JobServiceImpl jobService;
     private final ResponseUtil responseUtil;
 
     @Autowired
     public LocationServiceImpl(LocationRepository locationRepository, JobRepository jobRepository
-            , JobServiceImpl jobService, ResponseUtil responseUtil) {
+            , ResponseUtil responseUtil) {
         this.locationRepository = locationRepository;
         this.jobRepository = jobRepository;
-        this.jobService = jobService;
         this.responseUtil = responseUtil;
     }
 
@@ -99,7 +97,7 @@ public class LocationServiceImpl implements LocationService {
         List<Location> locations = locationRepository.findAll();
         response.setData(locations);
         response.setStatus("Success");
-        response.setMessage("Locations Found");
+        response.setMessage("Locations Found!");
         return response;
     }
 

@@ -12,9 +12,11 @@ import java.util.Set;
 @Repository
 public interface JobRepository extends JpaRepository<Job, Long> {
 
-    Page<Job> findByJobType(JobType jobType, PageRequest request);
+//    Page<Job> findByJobType(JobType jobType, PageRequest request);
 
     Page<Job> findByLocations_Name(String name, PageRequest request);
 
     Page<Job> findByQualifications_Name(String name, PageRequest request);
+
+    boolean existsByApplyLink(String applyLink);
 }

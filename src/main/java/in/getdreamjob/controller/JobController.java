@@ -10,26 +10,26 @@ import org.springframework.web.bind.annotation.*;
 import java.text.ParseException;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/job")
 public class JobController {
-    private JobService jobService;
+    private final JobService jobService;
 
     @Autowired
-    public void setJobService(JobService jobService) {
+    public JobController(JobService jobService) {
         this.jobService = jobService;
     }
 
-    @PostMapping("/createNewJob/{companyId}")
+    @PostMapping("/{companyId}")
     public ResponseEntity<?> createNewJob(@PathVariable long companyId, @RequestBody Job job) throws ParseException {
         return new ResponseEntity<>(jobService.createNewJob(companyId, job), HttpStatus.CREATED);
     }
 
-    @PutMapping("/updateJob/{jobId}")
-    public ResponseEntity<?> updateJob(@PathVariable long jobId, @RequestBody Job job) {
-        return new ResponseEntity<>(jobService.updateJob(jobId, job), HttpStatus.OK);
+    @PutMapping
+    public ResponseEntity<?> updateJob(@RequestBody Job job) {
+        return new ResponseEntity<>(jobService.updateJob(job), HttpStatus.OK);
     }
 
-    @GetMapping("/getAllJobs/{pageNo}")
+    @GetMapping("/{pageNo}")
     public ResponseEntity<?> getAllJobs(@PathVariable int pageNo) {
         return new ResponseEntity<>(jobService.getAllJobs(pageNo), HttpStatus.OK);
     }
@@ -39,7 +39,7 @@ public class JobController {
         return new ResponseEntity<>(jobService.getJob(jobId), HttpStatus.OK);
     }
 
-    @DeleteMapping("/deleteJob/{jobId}")
+    @DeleteMapping("/{jobId}")
     public ResponseEntity<?> deleteJobById(@PathVariable long jobId) {
         return new ResponseEntity<>(jobService.deleteJob(jobId), HttpStatus.OK);
     }

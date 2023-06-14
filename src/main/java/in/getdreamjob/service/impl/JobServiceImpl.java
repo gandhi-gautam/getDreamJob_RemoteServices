@@ -3,9 +3,11 @@ package in.getdreamjob.service.impl;
 import in.getdreamjob.exception.EmptyFieldException;
 import in.getdreamjob.exception.ResourceAlreadyExistsException;
 import in.getdreamjob.exception.ResourceNotFoundException;
+import in.getdreamjob.model.Category;
 import in.getdreamjob.model.Company;
 import in.getdreamjob.model.GeneralResponse;
 import in.getdreamjob.model.Job;
+import in.getdreamjob.repository.CategoryRepository;
 import in.getdreamjob.repository.CompanyRepository;
 import in.getdreamjob.repository.JobRepository;
 import in.getdreamjob.service.JobService;
@@ -30,12 +32,15 @@ public class JobServiceImpl implements JobService {
     private final CompanyRepository companyRepository;
     private final JobRepository jobRepository;
     private final ResponseUtil responseUtil;
+    private final CategoryRepository categoryRepository;
 
     @Autowired
-    public JobServiceImpl(CompanyRepository companyRepository, JobRepository jobRepository, ResponseUtil responseUtil) {
+    public JobServiceImpl(CompanyRepository companyRepository, JobRepository jobRepository, ResponseUtil responseUtil,
+                          CategoryRepository categoryRepository) {
         this.companyRepository = companyRepository;
         this.jobRepository = jobRepository;
         this.responseUtil = responseUtil;
+        this.categoryRepository = categoryRepository;
     }
 
     /**
@@ -61,6 +66,7 @@ public class JobServiceImpl implements JobService {
             ZonedDateTime currentDateTime = ZonedDateTime.now(indianZone);
             job.setCreatedOn(currentDateTime.toLocalDateTime());
             job.setLastApplyDate(job.getCreatedOn().plusMonths(MONTHS));
+            assignCategoryBasedOnExperience(job);
             job = jobRepository.save(job);
             response.setStatus("Success");
             response.setData(job);
@@ -169,6 +175,77 @@ public class JobServiceImpl implements JobService {
             throw new EmptyFieldException("Job Id Not Present in the Payload!");
         }
         return response;
+    }
+
+    /**
+     * This method adds category based on experience
+     *
+     * @param job
+     */
+    private void assignCategoryBasedOnExperience(Job job) {
+        if (job.getMinExperience() != null && job.getMaxExperience() != null) {
+            int minExperience = -2;
+            int maxExperience = -2;
+            try {
+
+                minExperience = Integer.parseInt(job.getMinExperience());
+                maxExperience = Integer.parseInt(job.getMaxExperience());
+            } catch (NumberFormatException exception) {
+                exception.printStackTrace();
+            }
+            if (minExperience == 0) {
+                if (maxExperience == 0) {
+                    Category category = categoryRepository.findByName("Internship");
+                    job.getCategories().add(category);
+                } else if (maxExperience == 1) {
+                    Category category = categoryRepository.findByName("Fresher");
+                    job.getCategories().add(category);
+                } else if (maxExperience > 1) {
+                    Category category = categoryRepository.findByName("Experience");
+                    job.getCategories().add(category);
+                } else if (maxExperience == -1) {
+                    Category category = categoryRepository.findByName("Experience");
+                    job.getCategories().add(category);
+                    category = categoryRepository.findByName("Fresher");
+                    job.getCategories().add(category);
+                }
+            } else if (minExperience == 1) {
+                if (maxExperience == 1) {
+                    Category category = categoryRepository.findByName("Fresher");
+                    job.getCategories().add(category);
+                } else if (maxExperience > 1) {
+                    Category category = categoryRepository.findByName("Experience");
+                    job.getCategories().add(category);
+                } else if (maxExperience == -1) {
+                    Category category = categoryRepository.findByName("Experience");
+                    job.getCategories().add(category);
+                }
+            } else if (minExperience > 1) {
+                if (minExperience <= maxExperience && maxExperience > 1) {
+                    Category category = categoryRepository.findByName("Experience");
+                    job.getCategories().add(category);
+                } else if (maxExperience == -1) {
+                    Category category = categoryRepository.findByName("Experience");
+                    job.getCategories().add(category);
+                }
+            } else if (minExperience == -1) {
+                if (maxExperience == 0) {
+                    Category category = categoryRepository.findByName("Internship");
+                    job.getCategories().add(category);
+                } else if (maxExperience == 1) {
+                    Category category = categoryRepository.findByName("Fresher");
+                    job.getCategories().add(category);
+                } else if (maxExperience > 1) {
+                    Category category = categoryRepository.findByName("Fresher");
+                    job.getCategories().add(category);
+                    category = categoryRepository.findByName("Experience");
+                    job.getCategories().add(category);
+                } else if (maxExperience == -1) {
+                    Category category = categoryRepository.findByName("Internship");
+                    job.getCategories().add(category);
+                }
+            }
+        }
     }
 
     /**

@@ -26,9 +26,9 @@ public class Job {
 
     private int noOfOpening = 10;
 
-    private String minExperience = "0";
+    private String minExperience = "-1";
 
-    private String maxExperience = "0";
+    private String maxExperience = "-1";
 
     private String minSalary = "4";
 

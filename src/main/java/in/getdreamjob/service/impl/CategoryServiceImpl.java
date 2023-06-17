@@ -24,15 +24,12 @@ public class CategoryServiceImpl implements CategoryService {
     private final static Logger logger = LoggerFactory.getLogger(CategoryServiceImpl.class);
     private final CategoryRepository categoryRepository;
     private final JobRepository jobRepository;
-    private final JobServiceImpl jobService;
     private final ResponseUtil responseUtil;
 
     @Autowired
-    public CategoryServiceImpl(CategoryRepository categoryRepository, JobRepository jobRepository,
-                               JobServiceImpl jobService, ResponseUtil responseUtil) {
+    public CategoryServiceImpl(CategoryRepository categoryRepository, JobRepository jobRepository, ResponseUtil responseUtil) {
         this.categoryRepository = categoryRepository;
         this.jobRepository = jobRepository;
-        this.jobService = jobService;
         this.responseUtil = responseUtil;
     }
 

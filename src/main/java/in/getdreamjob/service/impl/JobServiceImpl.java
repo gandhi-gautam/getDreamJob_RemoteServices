@@ -109,7 +109,7 @@ public class JobServiceImpl implements JobService {
     }
 
     /**
-     * This method fetchs all the job and returns paginated result
+     * This method fetches all the job and returns paginated result
      *
      * @param pageNo
      * @return

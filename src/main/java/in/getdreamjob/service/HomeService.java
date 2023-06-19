@@ -11,4 +11,8 @@ public interface HomeService {
     public GeneralResponse getJobByLocation(String locationName, int pageNo);
 
     public GeneralResponse getJobByQualification(String qualificationName, int pageNo);
+
+    public GeneralResponse getAllDistinctCategories();
+    public GeneralResponse getAllDistinctLocations();
+    public GeneralResponse getAllDistinctQualifications();
 }

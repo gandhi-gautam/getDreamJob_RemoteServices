@@ -4,6 +4,9 @@ import in.getdreamjob.exception.EmptyFieldException;
 import in.getdreamjob.exception.ResourceNotFoundException;
 import in.getdreamjob.model.GeneralResponse;
 import in.getdreamjob.model.Job;
+import in.getdreamjob.model.enums.Category;
+import in.getdreamjob.model.enums.Locations;
+import in.getdreamjob.model.enums.Qualifications;
 import in.getdreamjob.repository.CategoryRepository;
 import in.getdreamjob.repository.JobRepository;
 import in.getdreamjob.repository.LocationRepository;
@@ -30,6 +33,9 @@ public class HomeServiceImpl implements HomeService {
     private final CategoryRepository categoryRepository;
     private final LocationRepository locationRepository;
     private final QualificationRepository qualificationRepository;
+    private Category category;
+    private Locations locations;
+    private Qualifications qualifications;
 
     @Autowired
     public HomeServiceImpl(ResponseUtil responseUtil, JobRepository jobRepository, CategoryRepository categoryRepository, LocationRepository locationRepository, QualificationRepository qualificationRepository) {
@@ -145,6 +151,60 @@ public class HomeServiceImpl implements HomeService {
             }
         } else {
             throw new EmptyFieldException("Qualification Name Not Present in the Payload!");
+        }
+        return response;
+    }
+
+    /**
+     * This method returns all the distinct categories
+     *
+     * @return
+     */
+    @Override
+    public GeneralResponse getAllDistinctCategories() {
+        logger.info("Inside getAllDistinctCategories service method");
+        GeneralResponse response = responseUtil.createResponseObject("No Category Found!");
+        Category[] categories = Category.values();
+        if (categories != null && categories.length > 0) {
+            response.setData(categories);
+            response.setMessage("Categories Found!");
+            response.setStatus("Success");
+        }
+        return response;
+    }
+
+    /**
+     * This method returns all the distinct locations
+     *
+     * @return
+     */
+    @Override
+    public GeneralResponse getAllDistinctLocations() {
+        logger.info("Inside getAllDistinctLocations service method");
+        GeneralResponse response = responseUtil.createResponseObject("No Location Found!");
+        Locations[] locationsList = Locations.values();
+        if (locationsList != null && locationsList.length > 0) {
+            response.setData(locationsList);
+            response.setMessage("Locations Found!");
+            response.setStatus("Success");
+        }
+        return response;
+    }
+
+    /**
+     * This method returns all the distinct qualifications
+     *
+     * @return
+     */
+    @Override
+    public GeneralResponse getAllDistinctQualifications() {
+        logger.info("Inside getAllDistinctQualifications service method");
+        GeneralResponse response = responseUtil.createResponseObject("No Qualification Found!");
+        Qualifications[] qualificationsList = Qualifications.values();
+        if (qualificationsList != null && qualificationsList.length > 0) {
+            response.setData(qualificationsList);
+            response.setMessage("Qualification Found!");
+            response.setStatus("Success");
         }
         return response;
     }

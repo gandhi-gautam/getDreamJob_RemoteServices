@@ -38,4 +38,19 @@ public class HomePageController {
     public ResponseEntity<?> getJobByQualification(@PathVariable String qualificationName, @PathVariable int pageNo) {
         return new ResponseEntity<>(homeService.getJobByQualification(qualificationName, pageNo), HttpStatus.OK);
     }
+
+    @GetMapping("/categories")
+    public ResponseEntity<?> getAllDistinctCategories(){
+        return new ResponseEntity<>(homeService.getAllDistinctCategories(), HttpStatus.OK);
+    }
+
+    @GetMapping("/locations")
+    public ResponseEntity<?> getAllDistinctLocations(){
+        return new ResponseEntity<>(homeService.getAllDistinctLocations(), HttpStatus.OK);
+    }
+
+    @GetMapping("/qualifications")
+    public ResponseEntity<?> getAllDistinctQualifications(){
+        return new ResponseEntity<>(homeService.getAllDistinctQualifications(), HttpStatus.OK);
+    }
 }

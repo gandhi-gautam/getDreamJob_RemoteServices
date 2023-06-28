@@ -42,6 +42,18 @@ public class Job {
 
     private LocalDateTime createdOn;
 
+    @Transient
+    private long companyId;
+
+    @Transient
+    private String companyName;
+
+    @Transient
+    private String companyOfficialWebsite;
+
+    @Transient
+    private double companyRating;
+
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     private Company company;

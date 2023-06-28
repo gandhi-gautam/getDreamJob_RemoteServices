@@ -67,6 +67,7 @@ public class JobServiceImpl implements JobService {
             job.setCreatedOn(currentDateTime.toLocalDateTime());
             job.setLastApplyDate(job.getCreatedOn().plusMonths(MONTHS));
             assignCategoryBasedOnExperience(job);
+            job.setCompany(optionalCompany.get());
             job = jobRepository.save(job);
             response.setStatus("Success");
             response.setData(job);
@@ -120,6 +121,9 @@ public class JobServiceImpl implements JobService {
         GeneralResponse response = responseUtil.createResponseObject("No Job Data Found");
         PageRequest request = PageRequest.of(pageNo, PAGE_SIZE, Sort.Direction.DESC, "createdOn");
         Page<Job> jobs = jobRepository.findAll(request);
+        for (Job job : jobs) {
+            setCompanyData(job);
+        }
         if (jobs.getSize() > 0) {
             response.setStatus("Success");
             response.setData(jobs);
@@ -144,6 +148,7 @@ public class JobServiceImpl implements JobService {
                 throw new ResourceNotFoundException("Job With Id: " + jobId + " Not Found!");
             }
             Job job = jobOptional.get();
+            setCompanyData(job);
             if (job != null) {
                 response.setMessage("Job Found!");
                 response.setData(job);
@@ -341,6 +346,20 @@ public class JobServiceImpl implements JobService {
             job.setApplyLink(job.getApplyLink().trim());
         } else {
             throw new EmptyFieldException("Job Data Not Present in Payload!");
+        }
+    }
+
+    /**
+     * This method sets company data to the job
+     *
+     * @param job
+     */
+    private void setCompanyData(Job job) {
+        if (job.getCompany() != null) {
+            job.setCompanyId(job.getCompany().getId());
+            job.setCompanyName(job.getCompany().getName());
+            job.setCompanyOfficialWebsite(job.getCompany().getOfficialWebsite());
+            job.setCompanyRating(job.getCompany()   .getRating());
         }
     }
 }

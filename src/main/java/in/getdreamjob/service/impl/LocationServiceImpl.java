@@ -49,7 +49,7 @@ public class LocationServiceImpl implements LocationService {
         checkLocationNameUniqueness(location.getName());
         location = locationRepository.save(location);
         response.setMessage("Location Created");
-        response.setData(location);
+        response.setDetail(location);
         response.setStatus("Success");
         return response;
     }
@@ -75,7 +75,7 @@ public class LocationServiceImpl implements LocationService {
                 location = locationRepository.save(location);
                 response.setStatus("Success");
                 response.setMessage("Location Updated");
-                response.setData(location);
+                response.setDetail(location);
             } else {
                 throw new EmptyFieldException("Location Id Not Present in the PayLoad!");
             }
@@ -95,7 +95,7 @@ public class LocationServiceImpl implements LocationService {
         logger.info("Inside getAllLocations service method");
         GeneralResponse response = responseUtil.createResponseObject("No Location Found!");
         List<Location> locations = locationRepository.findAll();
-        response.setData(locations);
+        response.setDetail(locations);
         response.setStatus("Success");
         response.setMessage("Locations Found!");
         return response;
@@ -116,7 +116,7 @@ public class LocationServiceImpl implements LocationService {
             if (optionalLocation.isEmpty()) {
                 throw new ResourceNotFoundException("Location with Id: " + locationId + " Not Found!");
             }
-            response.setData(optionalLocation.get());
+            response.setDetail(optionalLocation.get());
             response.setStatus("Success");
             response.setMessage("Location Found!");
         } else {
@@ -147,7 +147,7 @@ public class LocationServiceImpl implements LocationService {
             locations.remove(optionalLocation.get());
             Job job = jobRepository.save(optionalJob.get());
             response.setStatus("Success");
-            response.setData(job);
+            response.setDetail(job);
             response.setMessage("Location disconnected from Job");
         } else {
             throw new EmptyFieldException("Job Id Or Location Id Not Present In The Payload");
@@ -177,7 +177,7 @@ public class LocationServiceImpl implements LocationService {
             locations.add(optionalLocation.get());
             Job job = jobRepository.save(optionalJob.get());
             response.setStatus("Success");
-            response.setData(job);
+            response.setDetail(job);
             response.setMessage("Location Connected from Job");
         } else {
             throw new EmptyFieldException("Job Id Or Location Id Not Present In The Payload");

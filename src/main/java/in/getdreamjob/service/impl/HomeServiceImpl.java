@@ -62,7 +62,7 @@ public class HomeServiceImpl implements HomeService {
         List<Job> jobs = jobRepository.findTopNByOrderByCreatedOnDesc(noOfJobs);
         if (jobs != null && jobs.size() > 0) {
             response.setMessage("Latest Job Found!");
-            response.setData(jobs);
+            response.setDetail(jobs);
             response.setStatus("Success");
         }
         return response;
@@ -86,7 +86,7 @@ public class HomeServiceImpl implements HomeService {
                 if (jobs != null && jobs.getSize() > 0) {
                     response.setStatus("Success");
                     response.setMessage("Jobs Found!");
-                    response.setData(jobs);
+                    response.setDetail(jobs);
                 }
             } else {
                 throw new ResourceNotFoundException("Category With Name " + categoryName + " Not found!");
@@ -115,7 +115,7 @@ public class HomeServiceImpl implements HomeService {
                 if (jobs != null && jobs.getSize() > 0) {
                     response.setStatus("Success");
                     response.setMessage("Jobs Found!");
-                    response.setData(jobs);
+                    response.setDetail(jobs);
                 }
             } else {
                 throw new ResourceNotFoundException("Location With Name " + locationName + " Not found!");
@@ -144,7 +144,7 @@ public class HomeServiceImpl implements HomeService {
                 if (jobs != null && jobs.getSize() > 0) {
                     response.setStatus("Success");
                     response.setMessage("Jobs Found!");
-                    response.setData(jobs);
+                    response.setDetail(jobs);
                 }
             } else {
                 throw new ResourceNotFoundException("Qualification With Name " + qualificationName + " Not found!");
@@ -166,7 +166,7 @@ public class HomeServiceImpl implements HomeService {
         GeneralResponse response = responseUtil.createResponseObject("No Category Found!");
         Category[] categories = Category.values();
         if (categories != null && categories.length > 0) {
-            response.setData(categories);
+            response.setDetail(categories);
             response.setMessage("Categories Found!");
             response.setStatus("Success");
         }
@@ -184,7 +184,7 @@ public class HomeServiceImpl implements HomeService {
         GeneralResponse response = responseUtil.createResponseObject("No Location Found!");
         Locations[] locationsList = Locations.values();
         if (locationsList != null && locationsList.length > 0) {
-            response.setData(locationsList);
+            response.setDetail(locationsList);
             response.setMessage("Locations Found!");
             response.setStatus("Success");
         }
@@ -202,7 +202,7 @@ public class HomeServiceImpl implements HomeService {
         GeneralResponse response = responseUtil.createResponseObject("No Qualification Found!");
         Qualifications[] qualificationsList = Qualifications.values();
         if (qualificationsList != null && qualificationsList.length > 0) {
-            response.setData(qualificationsList);
+            response.setDetail(qualificationsList);
             response.setMessage("Qualification Found!");
             response.setStatus("Success");
         }

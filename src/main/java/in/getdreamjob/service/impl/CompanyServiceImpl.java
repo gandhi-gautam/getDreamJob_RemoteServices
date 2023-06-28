@@ -46,7 +46,7 @@ public class CompanyServiceImpl implements CompanyService {
         checkCompanyOfficialWebsiteUniqueness(company.getOfficialWebsite());
         company = companyRepository.save(company);
         response.setMessage("Company Created");
-        response.setData(company);
+        response.setDetail(company);
         response.setStatus("Success");
         return response;
     }
@@ -71,7 +71,7 @@ public class CompanyServiceImpl implements CompanyService {
                 compareCompanyData(actualCompany, company);
                 actualCompany = companyRepository.save(actualCompany);
                 response.setStatus("Success");
-                response.setData(actualCompany);
+                response.setDetail(actualCompany);
                 response.setMessage("Company Saved!");
             } else {
                 throw new EmptyFieldException("Company Id Not Present in the PayLoad!");
@@ -94,7 +94,7 @@ public class CompanyServiceImpl implements CompanyService {
         List<Company> companies = companyRepository.findAll();
         response.setMessage("Company Found!");
         response.setStatus("Success");
-        response.setData(companies);
+        response.setDetail(companies);
         return response;
     }
 
@@ -113,7 +113,7 @@ public class CompanyServiceImpl implements CompanyService {
             if (optionalCompany.isEmpty()) {
                 throw new ResourceNotFoundException("Company with Id: " + companyId + " Not Found!");
             }
-            response.setData(optionalCompany.get());
+            response.setDetail(optionalCompany.get());
             response.setStatus("Success");
             response.setMessage("Company Found!");
         } else {

@@ -70,7 +70,7 @@ public class JobServiceImpl implements JobService {
             job.setCompany(optionalCompany.get());
             job = jobRepository.save(job);
             response.setStatus("Success");
-            response.setData(job);
+            response.setDetail(job);
             response.setMessage("Job Saved");
         } else {
             throw new EmptyFieldException("Company Id Not Present Payload!");
@@ -98,7 +98,7 @@ public class JobServiceImpl implements JobService {
                 compareJobDate(actualJob, job);
                 actualJob = jobRepository.save(actualJob);
                 response.setMessage("Job Updated!");
-                response.setData(actualJob);
+                response.setDetail(actualJob);
                 response.setStatus("Success");
             } else {
                 throw new EmptyFieldException("Valid Job Id Not Present In the Payload!");
@@ -126,7 +126,7 @@ public class JobServiceImpl implements JobService {
         }
         if (jobs.getSize() > 0) {
             response.setStatus("Success");
-            response.setData(jobs);
+            response.setDetail(jobs);
             response.setMessage("Jobs Found!");
         }
         return response;
@@ -151,7 +151,7 @@ public class JobServiceImpl implements JobService {
             setCompanyData(job);
             if (job != null) {
                 response.setMessage("Job Found!");
-                response.setData(job);
+                response.setDetail(job);
                 response.setStatus("Success");
             }
         } else {

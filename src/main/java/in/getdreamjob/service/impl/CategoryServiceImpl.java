@@ -47,7 +47,7 @@ public class CategoryServiceImpl implements CategoryService {
         checkCategoryNameUniqueness(category.getName());
         category = categoryRepository.save(category);
         response.setMessage("Category Created");
-        response.setData(category);
+        response.setDetail(category);
         response.setStatus("Success");
         return response;
     }
@@ -73,7 +73,7 @@ public class CategoryServiceImpl implements CategoryService {
                 category = categoryRepository.save(category);
                 response.setStatus("Success");
                 response.setMessage("Category Updated");
-                response.setData(category);
+                response.setDetail(category);
             } else {
                 throw new EmptyFieldException("Category Id Not Present in the PayLoad!");
             }
@@ -93,7 +93,7 @@ public class CategoryServiceImpl implements CategoryService {
         logger.info("Inside getAllCategory service method");
         GeneralResponse response = responseUtil.createResponseObject("No Category Found!");
         List<Category> categories = categoryRepository.findAll();
-        response.setData(categories);
+        response.setDetail(categories);
         response.setStatus("Success");
         response.setMessage("Categories Found");
         return response;
@@ -114,7 +114,7 @@ public class CategoryServiceImpl implements CategoryService {
             if (optionalCategory.isEmpty()) {
                 throw new ResourceNotFoundException("Category with Id: " + categoryId + " Not Found!");
             }
-            response.setData(optionalCategory.get());
+            response.setDetail(optionalCategory.get());
             response.setStatus("Success");
             response.setMessage("Category Found!");
         } else {
@@ -145,7 +145,7 @@ public class CategoryServiceImpl implements CategoryService {
             categories.remove(optionalCategory.get());
             Job job = jobRepository.save(optionalJob.get());
             response.setStatus("Success");
-            response.setData(job);
+            response.setDetail(job);
             response.setMessage("Category disconnected from Job");
         } else {
             throw new EmptyFieldException("Job Id Or Category Id Not Present In The Payload");
@@ -198,7 +198,7 @@ public class CategoryServiceImpl implements CategoryService {
             categories.add(optionalCategory.get());
             Job job = jobRepository.save(optionalJob.get());
             response.setStatus("Success");
-            response.setData(job);
+            response.setDetail(job);
             response.setMessage("Category Connected from Job");
         } else {
             throw new EmptyFieldException("Job Id Or Category Id Not Present In The Payload");

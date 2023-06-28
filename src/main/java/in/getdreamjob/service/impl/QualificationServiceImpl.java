@@ -51,7 +51,7 @@ public class QualificationServiceImpl implements QualificationService {
         checkQualificationNameUniqueness(qualification.getName());
         qualification = qualificationRepository.save(qualification);
         response.setMessage("Qualification Created");
-        response.setData(qualification);
+        response.setDetail(qualification);
         response.setStatus("Success");
         return response;
     }
@@ -77,7 +77,7 @@ public class QualificationServiceImpl implements QualificationService {
                 qualification = qualificationRepository.save(qualification);
                 response.setStatus("Success");
                 response.setMessage("Qualification Updated");
-                response.setData(qualification);
+                response.setDetail(qualification);
             } else {
                 throw new EmptyFieldException("Qualification Id Not Present in the PayLoad!");
             }
@@ -97,7 +97,7 @@ public class QualificationServiceImpl implements QualificationService {
         logger.info("Inside getAllQualifications service method");
         GeneralResponse response = responseUtil.createResponseObject("No Qualification Found!");
         List<Qualification> qualifications = qualificationRepository.findAll();
-        response.setData(qualifications);
+        response.setDetail(qualifications);
         response.setStatus("Success");
         response.setMessage("Qualifications Found");
         return response;
@@ -119,7 +119,7 @@ public class QualificationServiceImpl implements QualificationService {
             if (optionalQualification.isEmpty()) {
                 throw new ResourceNotFoundException("Qualification with Id: " + qualificationId + " Not Found!");
             }
-            response.setData(optionalQualification.get());
+            response.setDetail(optionalQualification.get());
             response.setStatus("Success");
             response.setMessage("Qualification Found!");
         } else {
@@ -173,7 +173,7 @@ public class QualificationServiceImpl implements QualificationService {
             qualifications.remove(optionalQualification.get());
             Job job = jobRepository.save(optionalJob.get());
             response.setStatus("Success");
-            response.setData(job);
+            response.setDetail(job);
             response.setMessage("Qualification disconnected from Job");
         } else {
             throw new EmptyFieldException("Job Id Or Qualification Id Not Present In The Payload");
@@ -203,7 +203,7 @@ public class QualificationServiceImpl implements QualificationService {
             qualifications.add(optionalQualification.get());
             Job job = jobRepository.save(optionalJob.get());
             response.setStatus("Success");
-            response.setData(job);
+            response.setDetail(job);
             response.setMessage("Qualification Connected from Job");
         } else {
             throw new EmptyFieldException("Job Id Or Qualification Id Not Present In The Payload");

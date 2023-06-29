@@ -20,6 +20,7 @@ import java.util.function.Function;
 public class JwtService {
 
     private final static String SECRET_KEY = generateRandomSecretKey();
+    public static final int EXPIRATION_TIME_IN_MINUTES = 360;
 
     private static String generateRandomSecretKey() {
         byte[] keyBytes = new byte[32]; // 256 bits
@@ -45,7 +46,7 @@ public class JwtService {
                 .setClaims(extraClaims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 6))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * EXPIRATION_TIME_IN_MINUTES))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }

@@ -120,7 +120,7 @@ public class JobServiceImpl implements JobService {
         logger.info("Inside getAllJobs service method");
         GeneralResponse response = responseUtil.createResponseObject("No Job Data Found");
         PageRequest request = PageRequest.of(pageNo, PAGE_SIZE, Sort.Direction.DESC, "createdOn");
-        Page<Job> jobs = jobRepository.findAll(request);
+        Page<Job> jobs = jobRepository.findByIsDisableFalse(request);
         for (Job job : jobs) {
             setCompanyData(job);
         }
@@ -359,7 +359,7 @@ public class JobServiceImpl implements JobService {
             job.setCompanyId(job.getCompany().getId());
             job.setCompanyName(job.getCompany().getName());
             job.setCompanyOfficialWebsite(job.getCompany().getOfficialWebsite());
-            job.setCompanyRating(job.getCompany()   .getRating());
+            job.setCompanyRating(job.getCompany().getRating());
         }
     }
 }

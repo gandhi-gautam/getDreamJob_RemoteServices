@@ -82,7 +82,7 @@ public class HomeServiceImpl implements HomeService {
         if (categoryName != null && !categoryName.isEmpty()) {
             if (categoryRepository.existsByName(categoryName)) {
                 PageRequest request = PageRequest.of(pageNo, PAGE_SIZE, Sort.Direction.DESC, "createdOn");
-                Page<Job> jobs = jobRepository.findByCategories_Name(categoryName, request);
+                Page<Job> jobs = jobRepository.findByCategories_NameAndIsDisableFalse(categoryName, request);
                 if (jobs != null && jobs.getSize() > 0) {
                     response.setStatus("Success");
                     response.setMessage("Jobs Found!");

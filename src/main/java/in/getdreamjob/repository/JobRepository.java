@@ -25,7 +25,7 @@ public interface JobRepository extends JpaRepository<Job, Long> {
     @Query(value = "SELECT * FROM job ORDER BY created_on DESC LIMIT ?1", nativeQuery = true)
     List<Job> findTopNByOrderByCreatedOnDesc(int n);
 
-    Page<Job> findByCategories_Name(String categoryName, PageRequest request);
+    Page<Job> findByCategories_NameAndIsDisableFalse(String categoryName, PageRequest request);
 
     @Modifying
     @Transactional

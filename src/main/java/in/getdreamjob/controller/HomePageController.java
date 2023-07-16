@@ -40,17 +40,17 @@ public class HomePageController {
     }
 
     @GetMapping("/categories")
-    public ResponseEntity<?> getAllDistinctCategories(){
+    public ResponseEntity<?> getAllDistinctCategories() {
         return new ResponseEntity<>(homeService.getAllDistinctCategories(), HttpStatus.OK);
     }
 
     @GetMapping("/locations")
-    public ResponseEntity<?> getAllDistinctLocations(){
+    public ResponseEntity<?> getAllDistinctLocations() {
         return new ResponseEntity<>(homeService.getAllDistinctLocations(), HttpStatus.OK);
     }
 
     @GetMapping("/qualifications")
-    public ResponseEntity<?> getAllDistinctQualifications(){
+    public ResponseEntity<?> getAllDistinctQualifications() {
         return new ResponseEntity<>(homeService.getAllDistinctQualifications(), HttpStatus.OK);
     }
 }

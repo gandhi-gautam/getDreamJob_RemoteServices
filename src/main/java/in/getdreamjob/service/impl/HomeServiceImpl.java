@@ -111,7 +111,7 @@ public class HomeServiceImpl implements HomeService {
         if (locationName != null && !locationName.isEmpty()) {
             if (locationRepository.existsByName(locationName)) {
                 PageRequest request = PageRequest.of(pageNo, PAGE_SIZE, Sort.Direction.DESC, "createdOn");
-                Page<Job> jobs = jobRepository.findByLocations_Name(locationName, request);
+                Page<Job> jobs = jobRepository.findByLocations_NameAndIsDisableFalse(locationName, request);
                 if (jobs != null && jobs.getSize() > 0) {
                     response.setStatus("Success");
                     response.setMessage("Jobs Found!");
@@ -140,7 +140,7 @@ public class HomeServiceImpl implements HomeService {
         if (qualificationName != null && !qualificationName.isEmpty()) {
             if (qualificationRepository.existsByName(qualificationName)) {
                 PageRequest request = PageRequest.of(pageNo, PAGE_SIZE, Sort.Direction.DESC, "createdOn");
-                Page<Job> jobs = jobRepository.findByQualifications_Name(qualificationName, request);
+                Page<Job> jobs = jobRepository.findByQualifications_NameAndIsDisableFalse(qualificationName, request);
                 if (jobs != null && jobs.getSize() > 0) {
                     response.setStatus("Success");
                     response.setMessage("Jobs Found!");

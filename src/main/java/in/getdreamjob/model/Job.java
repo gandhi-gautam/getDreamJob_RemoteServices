@@ -42,6 +42,8 @@ public class Job {
 
     private LocalDateTime createdOn;
 
+    private boolean isDisable = false;
+
     @Transient
     private long companyId;
 

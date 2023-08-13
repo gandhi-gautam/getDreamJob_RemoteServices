@@ -32,7 +32,7 @@ public class DisableJob {
      * already past and isDisable flag is set true
      */
     @Async
-    @Scheduled(cron = "0 54 8 * * ?", zone = "Asia/Kolkata")
+    @Scheduled(cron = "0 0 0 * * ?", zone = "Asia/Kolkata")
     public void toggleDisableFlag() {
         taskExecutor.execute(() -> {
             logger.info("Inside toggleDisableFlag cron job");
